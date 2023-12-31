@@ -1,0 +1,61 @@
+$primary-color: #128064;
+$secondly-color: #e3002a;
+$bg-color: #eaeaea;
+$button-border: none;
+$button-cursor: pointer;
+$button-padding: 10px 20px;
+$border-rad: 2.1px 2.1px;
+$fit: cover;
+
+body {
+  margin: 2em;
+}
+
+.logo-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+  object-fit: $fit;
+  margin-bottom: 1rem;
+}
+
+.logo {
+  height: auto;
+  width: 200px;
+}
+
+.title {
+  text-align: center;
+  background-color: $bg-color;
+  box-shadow: 1px 10px 10px -6px #bdbfbf;
+  padding: 1em 0em;
+}
+
+.custom-button {
+  background-color: $primary-color;
+  border: $button-border;
+  cursor: $button-cursor;
+  padding: $button-padding;
+  border-radius: $border-rad;
+  $-webkit-border-radius: $border-rad;
+  -moz-border-radius: $border-rad;
+  -ms-border-radius: $border-rad;
+  -o-border-radius: $border-rad;
+  -webkit-border-radius: $border-rad;
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+button {
+  border-style: none;
+  border-radius: $border-rad;
+  border: $button-border;
+  cursor: $button-cursor;
+  padding: $button-padding;
+  margin-top: 2em;
+}
