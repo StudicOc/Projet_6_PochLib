@@ -1,0 +1,53 @@
+body {
+  margin: 2em;
+}
+
+.logo-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+  object-fit: cover;
+  margin-bottom: 1rem;
+}
+
+.logo {
+  height: auto;
+  width: 200px;
+}
+
+.title {
+  text-align: center;
+  background-color: #eaeaea;
+  box-shadow: 1px 10px 10px -6px #bdbfbf;
+  padding: 1em 0em;
+}
+
+.custom-button {
+  background-color: #128064;
+  border: none;
+  cursor: pointer;
+  padding: 10px 20px;
+  border-radius: 2.1px 2.1px;
+  -moz-border-radius: 2.1px 2.1px;
+  -ms-border-radius: 2.1px 2.1px;
+  -o-border-radius: 2.1px 2.1px;
+  -webkit-border-radius: 2.1px 2.1px;
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+button {
+  border-style: none;
+  border-radius: 2.1px 2.1px;
+  border: none;
+  cursor: pointer;
+  padding: 10px 20px;
+  margin-top: 2em;
+}
+
+/*# sourceMappingURL=style.css.map */
