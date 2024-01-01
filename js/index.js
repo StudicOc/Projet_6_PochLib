@@ -7,7 +7,7 @@ function pageLoaded() {
     const buttonAddBook = document.createElement("button");
     buttonAddBook.textContent = "Ajouter un livre";
 
-    // Ajouter un style CSS au bouton "classList"
+    // Ajout d'un style CSS au bouton "classList"
     buttonAddBook.classList.add("custom-button");
     document.body.appendChild(buttonAddBook);
 
@@ -66,6 +66,9 @@ function pageLoaded() {
       },
       { once: true }
     );
+
+    //Fonction Fetch => URL => fetch(`https://www.googleapis.com/books/v1/volumes?q=${}`)
+    //{} déclaration d'une variable qui récupére les values des input
   });
 }
 
