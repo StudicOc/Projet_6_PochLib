@@ -11,13 +11,14 @@ function pageLoaded() {
     buttonAddBook.classList.add("custom-button");
     document.body.appendChild(buttonAddBook);
 
-    //Masquer les élements au chargement
+    //Masquer les élements au chargement de la page
     const contenth2 = document.querySelector("h2");
     contenth2.style.display = "none";
 
     const contentDiv = document.getElementById("content");
     contentDiv.style.display = "none";
 
+              // Ecoute de l'évènement "rechercher un livre"
     buttonAddBook.addEventListener(
       "click",
       function (event) {
