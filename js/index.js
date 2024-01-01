@@ -7,11 +7,11 @@ function pageLoaded() {
     const buttonAddBook = document.createElement("button");
     buttonAddBook.textContent = "Ajouter un livre";
 
-    // Ajout d'un style CSS au bouton "classList"
+    // Ajouter un style CSS au bouton "classList"
     buttonAddBook.classList.add("custom-button");
     document.body.appendChild(buttonAddBook);
 
-    //Masquer les élements au chargement de la page
+    //Masquer les élements au chargement
     const contenth2 = document.querySelector("h2");
     contenth2.style.display = "none";
 
@@ -21,7 +21,7 @@ function pageLoaded() {
     buttonAddBook.addEventListener(
       "click",
       function (event) {
-        // Création du formulaire de recherche
+        // Création du formulaire de recherche;
 
         console.log("J'ai cliqué");
         const form = document.createElement("form");
@@ -42,31 +42,31 @@ function pageLoaded() {
         form.appendChild(authorLabel);
         form.appendChild(authorInput);
 
+        // Créer une div pour les boutons
+        const buttonDiv = document.createElement("div");
+
         // Création du buttton de recherche
         const submitButton = document.createElement("button");
         submitButton.textContent = "Rechercher";
         submitButton.type = "submit";
         submitButton.style.backgroundColor = "#128064";
-        submitButton.appendChild(submitButton);
+
+        buttonDiv.appendChild(submitButton);
 
         // Création du button d'annulation
         const cancelButton = document.createElement("button");
         cancelButton.type = "reset";
         cancelButton.textContent = "Annuler";
         cancelButton.style.backgroundColor = "#BD5758";
-        cancelButton.appendChild(cancelButton);
+
+        buttonDiv.appendChild(cancelButton);
 
         document.body.appendChild(form);
+        document.body.appendChild(buttonDiv);
       },
-      { once: true } // Blocage du clique à une fois pour éviter la surcharge du form
+      { once: true }
     );
   });
-
-  //Fonction Fetch => URL => fetch(`https://www.googleapis.com/books/v1/volumes?q=${}`)
-  //{} déclaration d'une variable qui récupére les values des input
 }
 
 pageLoaded();
-
-//• setAttribute : méthode la plus générique, qui permet de spécifier n’importe quel attribut ;
-//• classList : propriété spécifique qui permet de modifier des classes.
