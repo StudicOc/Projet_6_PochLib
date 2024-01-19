@@ -1,5 +1,11 @@
-body {
-  margin: 2em;
+* {
+  margin: 0%;
+  padding: 0%;
+}
+
+.div-add-book {
+  display: flex;
+  justify-content: center;
 }
 
 .logo-container {
@@ -48,6 +54,21 @@ button {
   cursor: pointer;
   padding: 10px 20px;
   margin-top: 2em;
+}
+
+#divBooks {
+  margin: 1em;
+}
+
+img {
+  height: 8em;
+}
+
+.icon {
+  position: relative;
+  transition: 2s;
+  cursor: pointer;
+  -webkit-transition: 2s;
 }
 
 /*# sourceMappingURL=style.css.map */

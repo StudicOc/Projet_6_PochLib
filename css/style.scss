@@ -7,8 +7,13 @@ $button-padding: 10px 20px;
 $border-rad: 2.1px 2.1px;
 $fit: cover;
 
-body {
-  margin: 2em;
+* {
+  margin: 0%;
+  padding: 0%;
+}
+.div-add-book {
+  display: flex;
+  justify-content: center;
 }
 
 .logo-container {
@@ -59,3 +64,19 @@ button {
   padding: $button-padding;
   margin-top: 2em;
 }
+
+#divBooks {
+  margin: 1em;
+}
+
+img {
+  height: 8em;
+}
+
+.icon {
+  position: relative;
+  transition: 2s;
+  cursor: pointer;
+  -webkit-transition: 2s;
+}
+
