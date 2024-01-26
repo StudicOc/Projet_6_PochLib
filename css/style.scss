@@ -7,9 +7,23 @@ $button-padding: 10px 20px;
 $border-rad: 2.1px 2.1px;
 $fit: cover;
 
+@font-face {
+  font-family: "RobotoLight";
+  src: url("../Font/Roboto/Roboto-Light.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Font Awesome Free 5 15 3";
+  src: url(../Fontawesome/fontawesome-free-5.15.3-web/css/all.min.css);
+}
+
 * {
-  margin: 0%;
-  padding: 0%;
+  margin: auto 4px;
+  padding: 0;
+}
+body {
+  /* Your other styles here */
+  font-family: "RobotoLight", sans-serif; /* Use the defined font family */
 }
 .div-add-book {
   display: flex;
@@ -20,7 +34,7 @@ $fit: cover;
   display: flex;
   justify-content: center;
   margin-top: 1rem;
-  object-fit: $fit;
+  object-fit: cover;
   margin-bottom: 1rem;
 }
 
@@ -39,7 +53,6 @@ $fit: cover;
 .custom-button {
   background-color: $primary-color;
   border: $button-border;
-  cursor: $button-cursor;
   padding: $button-padding;
   border-radius: $border-rad;
   $-webkit-border-radius: $border-rad;
@@ -49,11 +62,26 @@ $fit: cover;
   -webkit-border-radius: $border-rad;
   margin-top: 2em;
   margin-bottom: 2em;
+  transition: transform 0.3s ease-in-out; /* Add transition property */
+}
+
+.custom-button:hover {
+  cursor: $button-cursor;
+  transform: scale(1.2); /* Apply the transformation on hover */
 }
 
 form {
-  display: flex;
-  flex-direction: column;
+  margin: 0 auto;
+}
+label {
+  display: block;
+  margin-bottom: 8px;
+}
+input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 16px;
+  box-sizing: border-box;
 }
 
 button {
@@ -80,3 +108,65 @@ img {
   -webkit-transition: 2s;
 }
 
+.flex-Button-Search-Cancel {
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  width: fit-content;
+  margin-bottom: 3em;
+}
+
+article {
+  border: 2px solid #9c9c9c;
+  border-radius: 8px;
+  padding: 10px;
+  margin: 10px;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: normal;
+  text-align: start;
+  background-color: whitesmoke;
+  font-size: small;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  margin-top: 10px;
+  object-fit: cover;
+}
+.img-cover {
+  max-width: 150px;
+  max-height: 250px;
+  text-align: center;
+}
+
+.icon {
+  margin-top: 10px;
+}
+
+.bookmark-btn {
+  cursor: pointer;
+}
+
+title,
+h2 {
+  text-align: center;
+  font-size: 20px;
+}
+
+.add_Books {
+  display: flex;
+  justify-content: center;
+}
+footer {
+  margin-top: 2em;
+}
+/* Media query for large screens */
+@media only screen and (min-width: 1024px) {
+  #divBooks {
+    display: flex;
+    justify-content: flex-start;
+  }
+}
