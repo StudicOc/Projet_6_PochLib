@@ -132,7 +132,7 @@ function pageLoaded() {
                     image: NoretrieveImg,
                   };
 
-                  function sendProductLocalStorage() {
+                  function sendAllBookSessionStorage() {
                     const uniqueKey = `book_${books.id}`;
                     const bookmarkButtons =
                       divBooks.querySelectorAll(".bookmark-btn");
@@ -147,7 +147,7 @@ function pageLoaded() {
                       });
                     });
                   }
-                  sendProductLocalStorage();
+                  sendAllBookSessionStorage();
                 }
               } else {
                 divBooks.innerHTML += `    
