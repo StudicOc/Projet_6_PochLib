@@ -157,8 +157,10 @@ function addButtonSearchBook(buttonAddBook, hrElement) {
       document.body.removeChild(buttonDiv);
 
       // Condition pour vérifier la présence de nos résultats de recherches
-      
-      
+      if (divBooks) {
+        document.body.removeChild(divBooks);
+      }
+      //if (bookbody) {document.body.removeChild(bookbody);}
     });
   });
 }
