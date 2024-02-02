@@ -1,177 +1,229 @@
+// CHARGEMENT DE NOTRE PAGE //
+
+// Function PAGELOADED //
 function pageLoaded() {
-  document.addEventListener("DOMContentLoaded", function () {
-    //Masquer les éléments au chargement de la page
-    const contenth2 = document.querySelector("h2");
-    contenth2.style.display = "none";
-    const contentDiv = document.getElementById("content");
-    contentDiv.style.display = "none";
+  const addBooksContainer = document.getElementById("content");
 
-    //Création d'une div avec createElement, insertion dans cette div d'un bouton
+  // Création de notre bouton " Ajouter un livre ""
+  const divElement = document.createElement("div");
+  divElement.classList.add("add_Books");
 
-    const addBooksContainer = document.getElementById("content");
-    const divElement = document.createElement("div");
-    divElement.classList.add("add_Books");
+  const buttonAddBook = document.createElement("button");
+  buttonAddBook.textContent = "Ajouter un livre";
+  buttonAddBook.classList.add("custom-button");
 
-    // Création du bouton pour rechercher un livre
-    const buttonAddBook = document.createElement("button");
-    buttonAddBook.textContent = "Ajouter un livre";
-    buttonAddBook.classList.add("custom-button");
+  divElement.appendChild(buttonAddBook);
+  addBooksContainer.appendChild(divElement);
 
-    // Ajout du bouton à la div
-    divElement.appendChild(buttonAddBook);
+  const hrElement = document.querySelector("hr");
+  document.body.insertBefore(divElement, hrElement);
 
-    // Append div as a child to the container
-    addBooksContainer.appendChild(divElement);
-    document.body.appendChild(divElement);
+  addButtonSearchBook(buttonAddBook, hrElement);
+}
 
-    // ECOUTE EVEN AJOUTER UN BOOK //
-    buttonAddBook.addEventListener("click", function (event) {
-      // Création du formulaire de recherche;
-      console.log("J'ai cliqué");
+function addButtonSearchBook(buttonAddBook, hrElement) {
+  buttonAddBook.addEventListener("click", function (event) {
+    // CONSTRUCTION DE NOTRE HTML //
 
-      const form = document.createElement("form");
-      const titleLabel = document.createElement("label");
-      titleLabel.textContent = "Titre du livre ";
-      const titleInput = document.createElement("input");
-      titleInput.type = "text";
-      titleInput.name = "title";
-      form.appendChild(titleLabel);
-      form.appendChild(titleInput);
+    // FORM //
+    const form = document.createElement("form");
 
-      const authorLabel = document.createElement("label");
-      authorLabel.textContent = "Auteur ";
-      const authorInput = document.createElement("input");
-      authorInput.type = "text";
-      authorInput.name = "author";
-      form.appendChild(authorLabel);
-      form.appendChild(authorInput);
+    const titleLabel = document.createElement("label");
+    titleLabel.textContent = "Titre du livre ";
+    const titleInput = document.createElement("input");
+    titleInput.type = "text";
+    titleInput.name = "title";
+    form.appendChild(titleLabel);
+    form.appendChild(titleInput);
 
-      // Créer une div pour les boutons
-      const buttonDiv = document.createElement("div");
-      buttonDiv.classList.add("flex-Button-Search-Cancel");
-      // Création du button de recherche
-      const submitButton = document.createElement("button");
-      submitButton.type = "submit";
-      submitButton.textContent = "Rechercher";
-      submitButton.style.backgroundColor = "#128064";
-      buttonDiv.appendChild(submitButton);
-      // Création du button d'annulation
-      const cancelButton = document.createElement("button");
-      cancelButton.type = "reset";
-      cancelButton.textContent = "Annuler";
-      cancelButton.style.backgroundColor = "#BD5758";
-      buttonDiv.appendChild(cancelButton);
-      document.body.appendChild(form);
-      document.body.appendChild(buttonDiv);
-      // ECOUTE EVENT SEARCH BOOK TO API GOOGLE BOOKS
-      submitButton.addEventListener("click", function (e) {
-        e.preventDefault();
-        const titleValue = titleInput.value.trim();
-        const authorValue = authorInput.value.trim();
-        const alertError = document.createElement("p");
-        // CONDITIONEMENT //
-        // SI VALEURS VIDE BLOQUER LA RECHERCHE
-        if (titleValue.trim() === "" || authorValue.trim() === "") {
-          alertError.innerText = "Veuillez vérifier votre saisie";
-          titleInput.style.borderColor = "#BD5758";
-          authorInput.style.borderColor = "#BD5758";
-          buttonDiv.appendChild(alertError);
-        }
-        // SINON DIPLAYS RESULTS
-        else {
-          const divBooks = document.createElement("div");
-          const titleValue = titleInput.value;
-          const authorValue = authorInput.value;
-          const URLBooks = `https://www.googleapis.com/books/v1/volumes?q=${titleValue}+inauthor:${authorValue}`;
+    const authorLabel = document.createElement("label");
+    authorLabel.textContent = "Auteur ";
+    const authorInput = document.createElement("input");
+    authorInput.type = "text";
+    authorInput.name = "author";
+    form.appendChild(authorLabel);
+    form.appendChild(authorInput);
 
-          // Fetch request
-          fetch(URLBooks)
-            .then((response) => response.json())
-            .then((data) => {
-              console.log(data);
-              //---Itération pour afficher les données de l'API---//
-              // CONDITIONNEMENT = SAERCH DOES NOT RETURN RESULTS
-              if (data.items && data.items.length > 0) {
-                const title = document.createElement("h5");
-                title.textContent = "Résultats de recherches ";
-                document.body.appendChild(title);
+    const buttonDiv = document.createElement("div");
+    buttonDiv.classList.add("flex-Button-Search-Cancel");
 
-                for (let books of data.items) {
-                  const NoretrieveImg = books.volumeInfo.imageLinks
-                    ? books.volumeInfo.imageLinks.thumbnail
-                    : "images/unavailable.png";
-                  const limitedDescription =
-                    books.volumeInfo.description &&
-                    books.volumeInfo.description.length > 150
-                      ? books.volumeInfo.description.slice(0, 150) + "..."
-                      : books.volumeInfo.description || "Information manquante";
-                  divBooks.id = "divBooks";
-                  // Book information and HTML template -->
-                  divBooks.innerHTML += `    
-                      
-            <article>
-                  <h5><strong>Titre:</strong> ${books.volumeInfo.title}</h5></br>
-                  <p><strong>Id:</strong> ${books.id}</p></br>
-                  <p>Autors: ${books.volumeInfo.authors}</p></br>
-                  <p>Description: ${limitedDescription}</p></br>
-                  <img src="${NoretrieveImg}" alt="Book Cover" class="img-cover"></br>
-                   <div class="icon">
-                      <span type="button" class="bookmark-btn">
-                          <i class="fas fa-bookmark"></i>
+    // BUTTON SUBMIT //
+
+    const submitButton = document.createElement("button");
+    submitButton.type = "submit";
+    submitButton.textContent = "Rechercher";
+    submitButton.style.backgroundColor = "#128064";
+    buttonDiv.appendChild(submitButton);
+
+    // BUTTON CANCEL //
+
+    const cancelButton = document.createElement("button");
+    cancelButton.type = "reset";
+    cancelButton.textContent = "Annuler";
+    cancelButton.style.backgroundColor = "#BD5758";
+    buttonDiv.appendChild(cancelButton);
+
+    document.body.appendChild(form);
+    document.body.appendChild(buttonDiv);
+
+    document.body.insertBefore(form, hrElement);
+    document.body.insertBefore(buttonDiv, hrElement);
+
+    // ECOUTE DE NOTRE EVENEMENT SUBMIT BUTTON //
+
+    submitButton.addEventListener("click", function (e) {
+      const titleValue = titleInput.value.trim();
+      const authorValue = authorInput.value.trim();
+      const alertError = document.createElement("p");
+
+      if (titleValue === "" || authorValue === "") {
+        alertError.innerText = "Veuillez vérifier votre saisie";
+        titleInput.style.borderColor = "#BD5758";
+        authorInput.style.borderColor = "#BD5758";
+        buttonDiv.appendChild(alertError);
+      } else {
+        const divBooks = document.createElement("div");
+        divBooks.id = "divBooks";
+
+        // REQUETTE HTPP DE  L’API de Google Books //
+
+        const URLBooks = `https://www.googleapis.com/books/v1/volumes?q=${titleValue}+inauthor:${authorValue}`;
+
+        fetch(URLBooks)
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data);
+
+            if (data.items && data.items.length > 0) {
+              const title = document.createElement("h5");
+              title.textContent = "Résultats de recherches ";
+              document.body.insertBefore(title, hrElement);
+
+              let articleElement;
+              for (let books of data.items) {
+                articleElement = document.createElement("article");
+                const NoretrieveImg = books.volumeInfo.imageLinks
+                  ? books.volumeInfo.imageLinks.thumbnail
+                  : "images/unavailable.png";
+                const limitedDescription =
+                  books.volumeInfo.description &&
+                  books.volumeInfo.description.length > 150
+                    ? books.volumeInfo.description.slice(0, 150) + "..."
+                    : books.volumeInfo.description || "Information manquante";
+
+                articleElement.innerHTML = `
+                    <h5><strong>Titre:</strong> ${books.volumeInfo.title}</h5></br>
+                    <p><strong>Id:</strong> ${books.id}</p></br>
+                    <p>Auteurs: ${books.volumeInfo.authors}</p></br>
+                    <p>Description: ${limitedDescription}</p></br>
+                    <img src="${NoretrieveImg}" alt="Book Cover" class="img-cover"></br>
+                    <div class="icon">
+                      <a><span type="button" class="bookmark-btn">
+                        <i class="fas fa-bookmark"></i></a>
                       </span>
                     </div>
-            </article>
-                  
-              `;
-                  document.body.appendChild(divBooks);
-                  const bookData = {
-                    title: books.volumeInfo.title,
-                    id: books.id,
-                    authors: books.volumeInfo.authors,
-                    description: limitedDescription,
-                    image: NoretrieveImg,
-                  };
+                  `;
 
-                  function sendAllBookSessionStorage() {
-                    const uniqueKey = `book_${books.id}`;
-                    const bookmarkButtons =
-                      divBooks.querySelectorAll(".bookmark-btn");
+                divBooks.appendChild(articleElement);
 
-                    bookmarkButtons.forEach((bookmarkButton) => {
-                      bookmarkButton.addEventListener("click", () => {
-                        bookmarkButton.style.color = "#128064";
-                        sessionStorage.setItem(
-                          uniqueKey,
-                          JSON.stringify(bookData)
-                        );
-                      });
-                    });
-                  }
-                  sendAllBookSessionStorage();
-                }
-              } else {
-                divBooks.innerHTML += `    
-                  <div>
-                  <p>Aucun livre n’a été trouvé</p>
-                  </div
-              `;
-                document.body.appendChild(divBooks);
+                const bookData = {
+                  title: books.volumeInfo.title,
+                  id: books.id,
+                  authors: books.volumeInfo.authors,
+                  description: limitedDescription,
+                  image: NoretrieveImg,
+                };
+
+                sendAllBookSessionStorage(articleElement, bookData);
               }
-            })
-            .catch((error) => {
-              console.error("Error fetching data:", error);
-            });
-        }
-      });
 
-      function cancelSearch() {
-        cancelButton.addEventListener("click", function () {
-          document.body.removeChild(form);
-          document.body.removeChild(buttonDiv);
-        });
+              document.body.insertBefore(divBooks, hrElement);
+            } else {
+              const noResultsDiv = document.createElement("div");
+              noResultsDiv.innerHTML = `<p>Aucun livre n’a été trouvé</p>`;
+              document.body.insertBefore(noResultsDiv, hrElement);
+            }
+          })
+          .catch((error) => {
+            console.error("Error fetching data:", error);
+          });
       }
-      cancelSearch();
+    });
+
+    // ECOUTE DE NOTRE EVENEMENT ANNULER LA RECHERCHE //
+
+    cancelButton.addEventListener("click", function () {
+      document.body.removeChild(form);
+      document.body.removeChild(buttonDiv);
+
+      // Condition pour vérifier la présence de nos résultats de recherches
+      
+      
     });
   });
 }
-pageLoaded();
+
+// ENREGISTREMENT DANS NOTRE SESSIONSTORAGE //
+
+// FUNCTION SENDALLBOOKSESSIONSTORAGE //
+function sendAllBookSessionStorage(articleElement, bookData) {
+  //Récupération de notre icon pour séléctionner un livre
+  const bookmarkButton = articleElement.querySelector(".bookmark-btn");
+
+  // Ecoute de notre évenement  Bookmark //
+  bookmarkButton.addEventListener("click", (event) => {
+    event.preventDefault();
+
+    const uniqueKey = `book_${bookData.id}`;
+    sessionStorage.setItem(uniqueKey, JSON.stringify(bookData));
+    bookmarkButton.style.color = "#128064";
+    console.log("Ajouté dans notre sessionStorage");
+
+    let bookbody = document.querySelector("#content");
+
+    // AFFICHAGE DE NOTRE POCH'LIST SI KEY DANS NOTRE SESSIONSTORAGE
+
+    //Effacer le contenu existant avant d'ajouter de nouvelles entrées
+    //bookbody.innerHTML = "";
+
+    for (let key in sessionStorage) {
+      if (sessionStorage.hasOwnProperty(key)) {
+        //GET ITEM //
+        let booksData = JSON.parse(sessionStorage.getItem(key));
+
+        // Verifier l'existance des propriétés
+        if (
+          booksData &&
+          booksData.title &&
+          booksData.authors &&
+          booksData.description &&
+          booksData.image
+        ) {
+          // Construction de notre élement HTML "article"
+          bookbody.innerHTML += `
+            <article>
+              <h5><strong>Titre:</strong> ${booksData.title}</h5></br>
+              <p>Auteurs: ${booksData.authors}</p></br>
+              <p>Description: ${booksData.description}</p></br>
+              <img src="${booksData.image}" alt="Book Cover" class="img-cover"></br>
+              <div class="icon">
+                <a><span type="button" class="bookmark-btn-delete">
+                <i class="fas fa-trash"></i></a>
+                </span>
+              </div>
+            </article>`;
+        }
+      }
+    }
+
+    // Ajout au DOM
+    document.body.appendChild(bookbody);
+  });
+}
+
+document.addEventListener("DOMContentLoaded", function (e) {
+  pageLoaded();
+  displayBooksFromSessionStorage();
+});
+
+//---Poch'List static aprés un changement de page----//
