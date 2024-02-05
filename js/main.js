@@ -1,12 +1,20 @@
+// Déclarations de nos variables (portée des variables et accessibilité dans notre code)
+
+const divElement = document.createElement("div");
+divElement.classList.add("add_Books");
+
+const divBooks = document.createElement("div");
+divBooks.id = "divBooks";
+
+//---------------------------------------------------------------------------------------//
+
 // CHARGEMENT DE NOTRE PAGE //
 
 // Function PAGELOADED //
 function pageLoaded() {
   const addBooksContainer = document.getElementById("content");
 
-  // Création de notre bouton " Ajouter un livre ""
-  const divElement = document.createElement("div");
-  divElement.classList.add("add_Books");
+  //--Création de notre bouton " Ajouter un livre "" --//
 
   const buttonAddBook = document.createElement("button");
   buttonAddBook.textContent = "Ajouter un livre";
@@ -21,8 +29,12 @@ function pageLoaded() {
   addButtonSearchBook(buttonAddBook, hrElement);
 }
 
+// -- Déclaration de notre variable pour récupération dans le code --//
+let uniqueKey;
+
 function addButtonSearchBook(buttonAddBook, hrElement) {
   buttonAddBook.addEventListener("click", function (event) {
+    divElement.style.display = "none";
     // CONSTRUCTION DE NOTRE HTML //
 
     // FORM //
@@ -82,10 +94,7 @@ function addButtonSearchBook(buttonAddBook, hrElement) {
         authorInput.style.borderColor = "#BD5758";
         buttonDiv.appendChild(alertError);
       } else {
-        const divBooks = document.createElement("div");
-        divBooks.id = "divBooks";
-
-        // REQUETTE HTPP DE  L’API de Google Books //
+        // REQUETTE HTTP DE L’API de Google Books //
 
         const URLBooks = `https://www.googleapis.com/books/v1/volumes?q=${titleValue}+inauthor:${authorValue}`;
 
@@ -112,6 +121,7 @@ function addButtonSearchBook(buttonAddBook, hrElement) {
                     : books.volumeInfo.description || "Information manquante";
 
                 articleElement.innerHTML = `
+
                     <h5><strong>Titre:</strong> ${books.volumeInfo.title}</h5></br>
                     <p><strong>Id:</strong> ${books.id}</p></br>
                     <p>Auteurs: ${books.volumeInfo.authors}</p></br>
@@ -126,6 +136,7 @@ function addButtonSearchBook(buttonAddBook, hrElement) {
 
                 divBooks.appendChild(articleElement);
 
+                //-- Création de notre objet livre-- //
                 const bookData = {
                   title: books.volumeInfo.title,
                   id: books.id,
@@ -134,7 +145,13 @@ function addButtonSearchBook(buttonAddBook, hrElement) {
                   image: NoretrieveImg,
                 };
 
-                sendAllBookSessionStorage(articleElement, bookData);
+                //-- Appel de la function sendAllBookSessionStorage--//
+                sendAllBookSessionStorage(
+                  articleElement,
+                  bookData,
+                  uniqueKey,
+                  divBooks
+                );
               }
 
               document.body.insertBefore(divBooks, hrElement);
@@ -152,15 +169,30 @@ function addButtonSearchBook(buttonAddBook, hrElement) {
 
     // ECOUTE DE NOTRE EVENEMENT ANNULER LA RECHERCHE //
 
-    cancelButton.addEventListener("click", function () {
-      document.body.removeChild(form);
-      document.body.removeChild(buttonDiv);
+    cancelButton.addEventListener("click", function (e) {
+      e.preventDefault();
+      const titleElement = document.querySelector("h5");
 
-      // Condition pour vérifier la présence de nos résultats de recherches
-      if (divBooks) {
+      if (document.body.contains(form)) {
+        document.body.removeChild(form);
+      }
+
+      if (document.body.contains(buttonDiv)) {
+        document.body.removeChild(buttonDiv);
+      }
+
+      if (document.body.contains(divBooks)) {
         document.body.removeChild(divBooks);
       }
-      //if (bookbody) {document.body.removeChild(bookbody);}
+
+      if (titleElement) {
+        document.body.removeChild(titleElement);
+      }
+      // Affichage du bouton
+      divElement.style.display = "flex"; //
+
+      // Nous retourner sa position initial
+      addBooksContainer.appendChild(divElement);
     });
   });
 }
@@ -168,41 +200,49 @@ function addButtonSearchBook(buttonAddBook, hrElement) {
 // ENREGISTREMENT DANS NOTRE SESSIONSTORAGE //
 
 // FUNCTION SENDALLBOOKSESSIONSTORAGE //
-function sendAllBookSessionStorage(articleElement, bookData) {
-  //Récupération de notre icon pour séléctionner un livre
+function sendAllBookSessionStorage(
+  articleElement,
+  bookData,
+  uniqueKey,
+  bookbody
+) {
+  //Récupération de notre icon pour sélectionner un livre
   const bookmarkButton = articleElement.querySelector(".bookmark-btn");
 
-  // Ecoute de notre évenement  Bookmark //
+  // Ecoute de notre événement Bookmark //
   bookmarkButton.addEventListener("click", (event) => {
     event.preventDefault();
 
-    const uniqueKey = `book_${bookData.id}`;
-    sessionStorage.setItem(uniqueKey, JSON.stringify(bookData));
-    bookmarkButton.style.color = "#128064";
-    console.log("Ajouté dans notre sessionStorage");
+    // Affichage d'une alerte si un record exist déjà dans SessionStorage //
 
-    let bookbody = document.querySelector("#content");
+    if (sessionStorage.getItem(uniqueKey)) {
+      alert("Vous ne pouvez ajouter deux fois le même livre");
+      return;
+    } else {
+      uniqueKey = `book_${bookData.id}`;
+      sessionStorage.setItem(uniqueKey, JSON.stringify(bookData));
+      bookmarkButton.style.color = "#128064";
+      console.log("Ajouté dans notre sessionStorage");
 
-    // AFFICHAGE DE NOTRE POCH'LIST SI KEY DANS NOTRE SESSIONSTORAGE
+      let bookbody = document.querySelector("#content");
 
-    //Effacer le contenu existant avant d'ajouter de nouvelles entrées
-    //bookbody.innerHTML = "";
+      // AFFICHAGE DE NOTRE POCH'LIST SI KEY DANS NOTRE SESSIONSTORAGE
 
-    for (let key in sessionStorage) {
-      if (sessionStorage.hasOwnProperty(key)) {
-        //GET ITEM //
-        let booksData = JSON.parse(sessionStorage.getItem(key));
+      for (let key in sessionStorage) {
+        if (sessionStorage.hasOwnProperty(key)) {
+          //GET ITEM //
+          let booksData = JSON.parse(sessionStorage.getItem(key));
 
-        // Verifier l'existance des propriétés
-        if (
-          booksData &&
-          booksData.title &&
-          booksData.authors &&
-          booksData.description &&
-          booksData.image
-        ) {
-          // Construction de notre élement HTML "article"
-          bookbody.innerHTML += `
+          // Verifier l'existance des propriétés
+          if (
+            booksData &&
+            booksData.title &&
+            booksData.authors &&
+            booksData.description &&
+            booksData.image
+          ) {
+            // Construction de notre élement HTML "article"
+            bookbody.innerHTML += `
             <article>
               <h5><strong>Titre:</strong> ${booksData.title}</h5></br>
               <p>Auteurs: ${booksData.authors}</p></br>
@@ -214,18 +254,31 @@ function sendAllBookSessionStorage(articleElement, bookData) {
                 </span>
               </div>
             </article>`;
+          }
         }
       }
-    }
 
-    // Ajout au DOM
-    document.body.appendChild(bookbody);
+      document.body.appendChild(bookbody);
+    }
   });
+  deleteBookIdToPochList(bookbody, uniqueKey);
+}
+
+function deleteBookIdToPochList(bookbody, key) {
+  // Récupération de l'élèment du DOM
+  const bookmarkButtonDelete = bookbody.querySelector(".bookmark-btn-delete");
+
+  if (bookmarkButtonDelete) {
+    bookmarkButtonDelete.addEventListener("click", (event) => {
+      // Vérifier l'existance d'un article avant supression
+      if (sessionStorage.getItem(key)) {
+        sessionStorage.removeItem(key);
+        bookbody.parentNode.removeChild(bookbody);
+      }
+    });
+  }
 }
 
 document.addEventListener("DOMContentLoaded", function (e) {
   pageLoaded();
-  displayBooksFromSessionStorage();
 });
-
-//---Poch'List static aprés un changement de page----//
