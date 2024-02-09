@@ -1,4 +1,9 @@
-// Déclarations de nos variables (portée des variables et accessibilité dans notre code)
+// ---------IMPORTATION DU FICHIER FUNCTION-----------//
+
+import {
+  sendAllBookSessionStorage,
+  deleteBookIdToPochList,
+} from "./function.js";
 
 const divElement = document.createElement("div");
 divElement.classList.add("add_Books");
@@ -6,15 +11,11 @@ divElement.classList.add("add_Books");
 const divBooks = document.createElement("div");
 divBooks.id = "divBooks";
 
-//---------------------------------------------------------------------------------------//
+// ----------- CHARGEMENT DE LA PAGE---------------//
 
-// CHARGEMENT DE NOTRE PAGE //
-
-// Function PAGELOADED //
 function pageLoaded() {
+  //---------------●Création de notre bouton => "Ajouter un livre"----------------//
   const addBooksContainer = document.getElementById("content");
-
-  //--Création de notre bouton " Ajouter un livre "" --//
 
   const buttonAddBook = document.createElement("button");
   buttonAddBook.textContent = "Ajouter un livre";
@@ -23,21 +24,26 @@ function pageLoaded() {
   divElement.appendChild(buttonAddBook);
   addBooksContainer.appendChild(divElement);
 
+  //------------●Gestion de notre positionnement des balises----------//
   const hrElement = document.querySelector("hr");
   document.body.insertBefore(divElement, hrElement);
 
   addButtonSearchBook(buttonAddBook, hrElement);
 }
 
-// -- Déclaration de notre variable pour récupération dans le code --//
+//--------------------------------------------------------------------------------//
+
 let uniqueKey;
 
+// ------- FETCH--- RETRIEVE RESULTS GOOGLE API BOOKS --------------------------//
+
 function addButtonSearchBook(buttonAddBook, hrElement) {
+  //----- ●Ecoute de l'évènement du bouton " ajouter un livre"-------------------//
   buttonAddBook.addEventListener("click", function (event) {
     divElement.style.display = "none";
-    // CONSTRUCTION DE NOTRE HTML //
+    divBooks.innerHTML = "";
 
-    // FORM //
+    //------------●Construction de notre formulaire------------------------//
     const form = document.createElement("form");
 
     const titleLabel = document.createElement("label");
@@ -59,15 +65,11 @@ function addButtonSearchBook(buttonAddBook, hrElement) {
     const buttonDiv = document.createElement("div");
     buttonDiv.classList.add("flex-Button-Search-Cancel");
 
-    // BUTTON SUBMIT //
-
     const submitButton = document.createElement("button");
     submitButton.type = "submit";
     submitButton.textContent = "Rechercher";
     submitButton.style.backgroundColor = "#128064";
     buttonDiv.appendChild(submitButton);
-
-    // BUTTON CANCEL //
 
     const cancelButton = document.createElement("button");
     cancelButton.type = "reset";
@@ -81,12 +83,12 @@ function addButtonSearchBook(buttonAddBook, hrElement) {
     document.body.insertBefore(form, hrElement);
     document.body.insertBefore(buttonDiv, hrElement);
 
-    // ECOUTE DE NOTRE EVENEMENT SUBMIT BUTTON //
-
     submitButton.addEventListener("click", function (e) {
       const titleValue = titleInput.value.trim();
       const authorValue = authorInput.value.trim();
       const alertError = document.createElement("p");
+
+      //--------------------●Vérification des saisies--------------//
 
       if (titleValue === "" || authorValue === "") {
         alertError.innerText = "Veuillez vérifier votre saisie";
@@ -94,14 +96,13 @@ function addButtonSearchBook(buttonAddBook, hrElement) {
         authorInput.style.borderColor = "#BD5758";
         buttonDiv.appendChild(alertError);
       } else {
-        // REQUETTE HTTP DE L’API de Google Books //
-
+        //----------------● AFFICHAGE DES RESULTATS DE RECHERCHES------------------------------//
         const URLBooks = `https://www.googleapis.com/books/v1/volumes?q=${titleValue}+inauthor:${authorValue}`;
 
         fetch(URLBooks)
           .then((response) => response.json())
           .then((data) => {
-            console.log(data);
+            console.log("Data received:", data);
 
             if (data.items && data.items.length > 0) {
               const title = document.createElement("h5");
@@ -109,8 +110,16 @@ function addButtonSearchBook(buttonAddBook, hrElement) {
               document.body.insertBefore(title, hrElement);
 
               let articleElement;
+
               for (let books of data.items) {
+                //-----------------------//
+
+                // ----Vérification si nous recevons toute la liste Item[]------------//
+                console.log("Processing book:", books);
+
+                const uniqueKey = `book_${books.id}`;
                 articleElement = document.createElement("article");
+
                 const NoretrieveImg = books.volumeInfo.imageLinks
                   ? books.volumeInfo.imageLinks.thumbnail
                   : "images/unavailable.png";
@@ -120,8 +129,10 @@ function addButtonSearchBook(buttonAddBook, hrElement) {
                     ? books.volumeInfo.description.slice(0, 150) + "..."
                     : books.volumeInfo.description || "Information manquante";
 
-                articleElement.innerHTML = `
+                //---------------●Construction de notre article-----------------//
 
+                articleElement.innerHTML = `
+                
                     <h5><strong>Titre:</strong> ${books.volumeInfo.title}</h5></br>
                     <p><strong>Id:</strong> ${books.id}</p></br>
                     <p>Auteurs: ${books.volumeInfo.authors}</p></br>
@@ -132,11 +143,14 @@ function addButtonSearchBook(buttonAddBook, hrElement) {
                         <i class="fas fa-bookmark"></i></a>
                       </span>
                     </div>
+                   
                   `;
 
                 divBooks.appendChild(articleElement);
 
-                //-- Création de notre objet livre-- //
+                // Appel de notre function de suppression d'un article//
+                deleteBookIdToPochList(articleElement, uniqueKey);
+
                 const bookData = {
                   title: books.volumeInfo.title,
                   id: books.id,
@@ -145,7 +159,6 @@ function addButtonSearchBook(buttonAddBook, hrElement) {
                   image: NoretrieveImg,
                 };
 
-                //-- Appel de la function sendAllBookSessionStorage--//
                 sendAllBookSessionStorage(
                   articleElement,
                   bookData,
@@ -167,7 +180,7 @@ function addButtonSearchBook(buttonAddBook, hrElement) {
       }
     });
 
-    // ECOUTE DE NOTRE EVENEMENT ANNULER LA RECHERCHE //
+    //------------------●Ecoute de l'évènement du bouton "ANNULER"-------------------//
 
     cancelButton.addEventListener("click", function (e) {
       e.preventDefault();
@@ -188,95 +201,11 @@ function addButtonSearchBook(buttonAddBook, hrElement) {
       if (titleElement) {
         document.body.removeChild(titleElement);
       }
-      // Affichage du bouton
-      divElement.style.display = "flex"; //
 
-      // Nous retourner sa position initial
+      divElement.style.display = "flex";
       addBooksContainer.appendChild(divElement);
     });
   });
-}
-
-// ENREGISTREMENT DANS NOTRE SESSIONSTORAGE //
-
-// FUNCTION SENDALLBOOKSESSIONSTORAGE //
-function sendAllBookSessionStorage(
-  articleElement,
-  bookData,
-  uniqueKey,
-  bookbody
-) {
-  //Récupération de notre icon pour sélectionner un livre
-  const bookmarkButton = articleElement.querySelector(".bookmark-btn");
-
-  // Ecoute de notre événement Bookmark //
-  bookmarkButton.addEventListener("click", (event) => {
-    event.preventDefault();
-
-    // Affichage d'une alerte si un record exist déjà dans SessionStorage //
-
-    if (sessionStorage.getItem(uniqueKey)) {
-      alert("Vous ne pouvez ajouter deux fois le même livre");
-      return;
-    } else {
-      uniqueKey = `book_${bookData.id}`;
-      sessionStorage.setItem(uniqueKey, JSON.stringify(bookData));
-      bookmarkButton.style.color = "#128064";
-      console.log("Ajouté dans notre sessionStorage");
-
-      let bookbody = document.querySelector("#content");
-
-      // AFFICHAGE DE NOTRE POCH'LIST SI KEY DANS NOTRE SESSIONSTORAGE
-
-      for (let key in sessionStorage) {
-        if (sessionStorage.hasOwnProperty(key)) {
-          //GET ITEM //
-          let booksData = JSON.parse(sessionStorage.getItem(key));
-
-          // Verifier l'existance des propriétés
-          if (
-            booksData &&
-            booksData.title &&
-            booksData.authors &&
-            booksData.description &&
-            booksData.image
-          ) {
-            // Construction de notre élement HTML "article"
-            bookbody.innerHTML += `
-            <article>
-              <h5><strong>Titre:</strong> ${booksData.title}</h5></br>
-              <p>Auteurs: ${booksData.authors}</p></br>
-              <p>Description: ${booksData.description}</p></br>
-              <img src="${booksData.image}" alt="Book Cover" class="img-cover"></br>
-              <div class="icon">
-                <a><span type="button" class="bookmark-btn-delete">
-                <i class="fas fa-trash"></i></a>
-                </span>
-              </div>
-            </article>`;
-          }
-        }
-      }
-
-      document.body.appendChild(bookbody);
-    }
-  });
-  deleteBookIdToPochList(bookbody, uniqueKey);
-}
-
-function deleteBookIdToPochList(bookbody, key) {
-  // Récupération de l'élèment du DOM
-  const bookmarkButtonDelete = bookbody.querySelector(".bookmark-btn-delete");
-
-  if (bookmarkButtonDelete) {
-    bookmarkButtonDelete.addEventListener("click", (event) => {
-      // Vérifier l'existance d'un article avant supression
-      if (sessionStorage.getItem(key)) {
-        sessionStorage.removeItem(key);
-        bookbody.parentNode.removeChild(bookbody);
-      }
-    });
-  }
 }
 
 document.addEventListener("DOMContentLoaded", function (e) {
