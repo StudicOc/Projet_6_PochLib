@@ -29,11 +29,16 @@ function pageLoaded() {
   document.body.insertBefore(divElement, hrElement);
 
   addButtonSearchBook(buttonAddBook, hrElement);
+
+  //---------------Poch'List - Gestion de la visibilité------------------------//
+  if (sessionStorage.getItem(key) > 0) {
+    document.getElementById("#content").style.display = "block";
+  } else {
+    document.getElementById("#content").style.display = "none";
+  }
 }
 
 //--------------------------------------------------------------------------------//
-
-let uniqueKey;
 
 // ------- FETCH--- RETRIEVE RESULTS GOOGLE API BOOKS --------------------------//
 
@@ -132,7 +137,7 @@ function addButtonSearchBook(buttonAddBook, hrElement) {
                 //---------------●Construction de notre article-----------------//
 
                 articleElement.innerHTML = `
-                
+
                     <h5><strong>Titre:</strong> ${books.volumeInfo.title}</h5></br>
                     <p><strong>Id:</strong> ${books.id}</p></br>
                     <p>Auteurs: ${books.volumeInfo.authors}</p></br>
