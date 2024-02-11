@@ -179,6 +179,17 @@ h5 {
     width: 14%;
   }
 }
+@media only screen and (min-width: 601px) and (max-width: 800px) {
+  article {
+    width: 14%;
+  }
+  .book-container {
+    padding: 8px;
+  }
+  .book-title {
+    font-size: 1em;
+  }
+}
 @media only screen and (min-width: 600px) {
   article {
     width: 14%;
