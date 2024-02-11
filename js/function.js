@@ -27,10 +27,16 @@ export function sendAllBookSessionStorage(
 
       let bookbody = document.querySelector("#content");
 
+      // Vider le contenu afin d'éviter les doublons //
+
+      //ATTENTION ERREUR 0 RESOUDRE SI CONTENU VIDE pochlist titre disparait
+      bookbody.innerHTML = "";
+
       for (let key in sessionStorage) {
         if (sessionStorage.hasOwnProperty(key)) {
           let booksData = JSON.parse(sessionStorage.getItem(key));
 
+          console.log(bookData.title);
           if (
             booksData &&
             booksData.title &&
@@ -61,12 +67,13 @@ export function sendAllBookSessionStorage(
         }
       }
 
-      document.body.appendChild(bookbody);
+      //document.body.appendChild(bookbody);
     }
   });
 }
 
 //----- Ecoute de l'évènement de l'icon "Bookmark" de supression d'un article-------------------//
+
 export function deleteBookIdToPochList(articleElement, uniqueKey) {
   const bookmarkButtonDelete = articleElement.querySelector(
     ".bookmark-btn-delete"
@@ -74,23 +81,28 @@ export function deleteBookIdToPochList(articleElement, uniqueKey) {
 
   if (bookmarkButtonDelete) {
     bookmarkButtonDelete.addEventListener("click", (event) => {
-      if (sessionStorage.getItem(uniqueKey)) {
-        sessionStorage.removeItem(uniqueKey);
-        articleElement.parentNode.removeChild(articleElement);
+      sessionStorage.removeItem(uniqueKey);
+      articleElement.parentNode.removeChild(articleElement);
 
-        //----- Suppression dynamique avec une alerte---------//
+      //----------Affichage dynamique---------------//
+      Swal.fire({
+        title: "Article supprimé",
+        icon: "success",
+        background: "#C7F0BB",
+        showConfirmButton: false,
+        timer: 2500,
+      });
 
-        Swal.fire({
-          title: "Article supprimé",
-          icon: "success",
-          background: "#C7F0BB",
-          showConfirmButton: false,
-          timer: 2500,
-        });
-        console.log("Nous avons bien supprimé l'article: " + uniqueKey);
-      } else {
-        console.log("Une erreur s'est produite");
-      }
+      console.log("Nous avons bien supprimé l'article: " + uniqueKey);
     });
   }
+}
+
+//----------------Affichage de la Poch-List lors du rechargement de la page--------------//
+
+export function displayStaticDataofSessionSorage() {
+  const displayBooks = document.querySelector("#content");
+
+  //if (sessionStorage.getItem(uniqueKey) > 0) {displayBooks.style.display = "block";} else {
+  //displayBooks.style.display = "none";}
 }

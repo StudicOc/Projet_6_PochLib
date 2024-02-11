@@ -3,6 +3,7 @@
 import {
   sendAllBookSessionStorage,
   deleteBookIdToPochList,
+  displayStaticDataofSessionSorage,
 } from "./function.js";
 
 const divElement = document.createElement("div");
@@ -29,13 +30,9 @@ function pageLoaded() {
   document.body.insertBefore(divElement, hrElement);
 
   addButtonSearchBook(buttonAddBook, hrElement);
+ 
 
-  //---------------Poch'List - Gestion de la visibilité------------------------//
-  if (sessionStorage.getItem(key) > 0) {
-    document.getElementById("#content").style.display = "block";
-  } else {
-    document.getElementById("#content").style.display = "none";
-  }
+  
 }
 
 //--------------------------------------------------------------------------------//
@@ -117,7 +114,7 @@ function addButtonSearchBook(buttonAddBook, hrElement) {
               let articleElement;
 
               for (let books of data.items) {
-                //-----------------------//
+                //----------------------------------------------------------------------//
 
                 // ----Vérification si nous recevons toute la liste Item[]------------//
                 console.log("Processing book:", books);
@@ -150,6 +147,8 @@ function addButtonSearchBook(buttonAddBook, hrElement) {
                     </div>
                    
                   `;
+
+                // console.log(articleElement);
 
                 divBooks.appendChild(articleElement);
 
@@ -215,4 +214,5 @@ function addButtonSearchBook(buttonAddBook, hrElement) {
 
 document.addEventListener("DOMContentLoaded", function (e) {
   pageLoaded();
+  displayStaticDataofSessionSorage();
 });
