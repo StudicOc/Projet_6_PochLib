@@ -101,8 +101,44 @@ export function deleteBookIdToPochList(articleElement, uniqueKey) {
 //----------------Affichage de la Poch-List lors du rechargement de la page--------------//
 
 export function displayStaticDataofSessionSorage() {
-  const displayBooks = document.querySelector("#content");
+  const displayBooksContent = document.getElementById("content");
+  const pochListTitle = displayBooksContent.querySelector("h2");
 
-  //if (sessionStorage.getItem(uniqueKey) > 0) {displayBooks.style.display = "block";} else {
-  //displayBooks.style.display = "none";}
+  displayBooksContent.innerHTML = "";
+
+  for (let key in sessionStorage) {
+    if (sessionStorage.hasOwnProperty(key)) {
+      try {
+        let bookData = JSON.parse(sessionStorage.getItem(key));
+
+        if (
+          typeof bookData === "object" &&
+          bookData.title &&
+          bookData.authors &&
+          bookData.description &&
+          bookData.image
+        ) {
+          const articleElement = document.createElement("article");
+          articleElement.innerHTML = `
+            <h5><strong>Titre:</strong> ${bookData.title}</h5></br>
+            <p><strong>Id:</strong> ${bookData.id}</p></br>
+            <p>Auteurs: ${bookData.authors}</p></br>
+            <p>Description: ${bookData.description}</p></br>
+            <img src="${bookData.image}" alt="Book Cover" class="img-cover"></br>
+            <div class="icon">
+              <a><span type="button" class="bookmark-btn-delete">
+                <i class="fas fa-trash"></i></a>
+              </span>
+            </div>
+          `;
+
+          displayBooksContent.appendChild(articleElement);
+
+          deleteBookIdToPochList(articleElement, key);
+        }
+      } catch (error) {
+        console.error("Error parsing sessionStorage item:", error);
+      }
+    }
+  }
 }

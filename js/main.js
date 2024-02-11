@@ -6,17 +6,20 @@ import {
   displayStaticDataofSessionSorage,
 } from "./function.js";
 
+//---RECUPERATION DES ELEMENTS DU DOM---//
+
 const divElement = document.createElement("div");
 divElement.classList.add("add_Books");
 
 const divBooks = document.createElement("div");
 divBooks.id = "divBooks";
 
+const addBooksContainer = document.getElementById("content");
+
 // ----------- CHARGEMENT DE LA PAGE---------------//
 
 function pageLoaded() {
-  //---------------●Création de notre bouton => "Ajouter un livre"----------------//
-  const addBooksContainer = document.getElementById("content");
+  //---------------Création de notre bouton => "Ajouter un livre"----------------//
 
   const buttonAddBook = document.createElement("button");
   buttonAddBook.textContent = "Ajouter un livre";
@@ -25,21 +28,21 @@ function pageLoaded() {
   divElement.appendChild(buttonAddBook);
   addBooksContainer.appendChild(divElement);
 
-  //------------●Gestion de notre positionnement des balises----------//
+  //------------Gestion de notre positionnement des balises----------//
   const hrElement = document.querySelector("hr");
   document.body.insertBefore(divElement, hrElement);
 
-  addButtonSearchBook(buttonAddBook, hrElement);
- 
-
-  
+  addButtonSearchBook(buttonAddBook, hrElement, cancelButton);
 }
 
 //--------------------------------------------------------------------------------//
 
 // ------- FETCH--- RETRIEVE RESULTS GOOGLE API BOOKS --------------------------//
 
+let cancelButton;
 function addButtonSearchBook(buttonAddBook, hrElement) {
+  const formContainer = document.createElement("div");
+
   //----- ●Ecoute de l'évènement du bouton " ajouter un livre"-------------------//
   buttonAddBook.addEventListener("click", function (event) {
     divElement.style.display = "none";
@@ -79,12 +82,15 @@ function addButtonSearchBook(buttonAddBook, hrElement) {
     cancelButton.style.backgroundColor = "#BD5758";
     buttonDiv.appendChild(cancelButton);
 
-    document.body.appendChild(form);
-    document.body.appendChild(buttonDiv);
+    document.body.appendChild(formContainer);
+    document.body.insertBefore(formContainer, hrElement);
 
-    document.body.insertBefore(form, hrElement);
-    document.body.insertBefore(buttonDiv, hrElement);
+    // Append the form and buttons to the form container
+    formContainer.appendChild(form);
+    formContainer.appendChild(buttonDiv);
 
+    // Pass the cancel button and form container to the cancelSubmitForm function
+    cancelSubmitForm(cancelButton, formContainer);
     submitButton.addEventListener("click", function (e) {
       const titleValue = titleInput.value.trim();
       const authorValue = authorInput.value.trim();
@@ -98,42 +104,58 @@ function addButtonSearchBook(buttonAddBook, hrElement) {
         authorInput.style.borderColor = "#BD5758";
         buttonDiv.appendChild(alertError);
       } else {
-        //----------------● AFFICHAGE DES RESULTATS DE RECHERCHES------------------------------//
-        const URLBooks = `https://www.googleapis.com/books/v1/volumes?q=${titleValue}+inauthor:${authorValue}`;
+        console.log("Validation du formulaire");
+        getDataFetching(titleValue, authorValue, hrElement);
+      }
+    });
 
-        fetch(URLBooks)
-          .then((response) => response.json())
-          .then((data) => {
-            console.log("Data received:", data);
+    cancelSubmitForm(cancelButton, formContainer);
+  });
+}
 
-            if (data.items && data.items.length > 0) {
-              const title = document.createElement("h5");
-              title.textContent = "Résultats de recherches ";
-              document.body.insertBefore(title, hrElement);
+//------------------Fonction bouton "RECHERCHER"-------------------//
 
-              let articleElement;
+function getDataFetching(titleValue, authorValue, hrElement) {
+  //----------------AFFICHAGE DES RESULTATS DE RECHERCHES------------------------------//
+  const URLBooks = `https://www.googleapis.com/books/v1/volumes?q=${titleValue}+inauthor:${authorValue}`;
 
-              for (let books of data.items) {
-                //----------------------------------------------------------------------//
+  fetch(URLBooks, {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("Data received:", data);
 
-                // ----Vérification si nous recevons toute la liste Item[]------------//
-                console.log("Processing book:", books);
+      if (data.items && data.items.length > 0) {
+        const title = document.createElement("h5");
+        title.textContent = "Résultats de recherches ";
+        document.body.insertBefore(title, hrElement);
 
-                const uniqueKey = `book_${books.id}`;
-                articleElement = document.createElement("article");
+        let articleElement;
 
-                const NoretrieveImg = books.volumeInfo.imageLinks
-                  ? books.volumeInfo.imageLinks.thumbnail
-                  : "images/unavailable.png";
-                const limitedDescription =
-                  books.volumeInfo.description &&
-                  books.volumeInfo.description.length > 150
-                    ? books.volumeInfo.description.slice(0, 150) + "..."
-                    : books.volumeInfo.description || "Information manquante";
+        for (let books of data.items) {
+          // ----Vérification si nous recevons toute la liste Item[]------------//
+          console.log("Processing book:", books);
 
-                //---------------●Construction de notre article-----------------//
+          const uniqueKey = `book_${books.id}`;
+          articleElement = document.createElement("article");
 
-                articleElement.innerHTML = `
+          const NoretrieveImg = books.volumeInfo.imageLinks
+            ? books.volumeInfo.imageLinks.thumbnail
+            : "images/unavailable.png";
+          const limitedDescription =
+            books.volumeInfo.description &&
+            books.volumeInfo.description.length > 150
+              ? books.volumeInfo.description.slice(0, 150) + "..."
+              : books.volumeInfo.description || "Information manquante";
+
+          //---------------Construction de notre article-----------------//
+
+          articleElement.innerHTML = `
 
                     <h5><strong>Titre:</strong> ${books.volumeInfo.title}</h5></br>
                     <p><strong>Id:</strong> ${books.id}</p></br>
@@ -148,68 +170,57 @@ function addButtonSearchBook(buttonAddBook, hrElement) {
                    
                   `;
 
-                // console.log(articleElement);
+          divBooks.appendChild(articleElement);
 
-                divBooks.appendChild(articleElement);
+          // Appel de notre function de suppression d'un article//
+          deleteBookIdToPochList(articleElement, uniqueKey);
 
-                // Appel de notre function de suppression d'un article//
-                deleteBookIdToPochList(articleElement, uniqueKey);
+          const bookData = {
+            title: books.volumeInfo.title,
+            id: books.id,
+            authors: books.volumeInfo.authors,
+            description: limitedDescription,
+            image: NoretrieveImg,
+          };
 
-                const bookData = {
-                  title: books.volumeInfo.title,
-                  id: books.id,
-                  authors: books.volumeInfo.authors,
-                  description: limitedDescription,
-                  image: NoretrieveImg,
-                };
+          sendAllBookSessionStorage(
+            articleElement,
+            bookData,
+            uniqueKey,
+            divBooks
+          );
+        }
 
-                sendAllBookSessionStorage(
-                  articleElement,
-                  bookData,
-                  uniqueKey,
-                  divBooks
-                );
-              }
-
-              document.body.insertBefore(divBooks, hrElement);
-            } else {
-              const noResultsDiv = document.createElement("div");
-              noResultsDiv.innerHTML = `<p>Aucun livre n’a été trouvé</p>`;
-              document.body.insertBefore(noResultsDiv, hrElement);
-            }
-          })
-          .catch((error) => {
-            console.error("Error fetching data:", error);
-          });
+        document.body.insertBefore(divBooks, hrElement);
+      } else {
+        const noResultsDiv = document.createElement("div");
+        noResultsDiv.innerHTML = `<p>Aucun livre n’a été trouvé</p>`;
+        document.body.insertBefore(noResultsDiv, hrElement);
       }
+    })
+    .catch((error) => {
+      console.error("Error fetching data:", error);
     });
+}
 
-    //------------------●Ecoute de l'évènement du bouton "ANNULER"-------------------//
+//------------------Fonction bouton "ANNULER"-------------------//
+function cancelSubmitForm(cancelButton, formContainer) {
+  cancelButton.addEventListener("click", function (e) {
+    e.preventDefault();
 
-    cancelButton.addEventListener("click", function (e) {
-      e.preventDefault();
-      const titleElement = document.querySelector("h5");
+    if (document.body.contains(formContainer)) {
+      document.body.removeChild(formContainer);
+    }
 
-      if (document.body.contains(form)) {
-        document.body.removeChild(form);
-      }
+    divElement.style.display = "flex";
+    addBooksContainer.appendChild(divElement);
 
-      if (document.body.contains(buttonDiv)) {
-        document.body.removeChild(buttonDiv);
-      }
+    const hrElement = document.querySelector("hr");
+    document.body.insertBefore(divElement, hrElement);
 
-      if (document.body.contains(divBooks)) {
-        document.body.removeChild(divBooks);
-      }
-
-      if (titleElement) {
-        document.body.removeChild(titleElement);
-      }
-
-      divElement.style.display = "flex";
-      addBooksContainer.appendChild(divElement);
-    });
+    formContainer.innerHTML = "";
   });
+  
 }
 
 document.addEventListener("DOMContentLoaded", function (e) {
