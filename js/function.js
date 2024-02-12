@@ -84,6 +84,7 @@ export function deleteBookIdToPochList(articleElement, uniqueKey) {
       sessionStorage.removeItem(uniqueKey);
       articleElement.parentNode.removeChild(articleElement);
 
+      
       //----------Affichage dynamique---------------//
       Swal.fire({
         title: "Article supprimé",
