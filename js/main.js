@@ -94,6 +94,15 @@ function addButtonSearchBook(buttonAddBook, hrElement) {
         titleInput.style.borderColor = "#BD5758";
         authorInput.style.borderColor = "#BD5758";
         buttonDiv.appendChild(alertError);
+      }
+      if (!isNaN(titleValue) || !isNaN(authorValue)) {
+        alert("Veuillez saisir un titre et un auteur sans chiffres");
+        console.log("L'utilisateur utilise des données numériques");
+      }
+      if (titleValue.length < 3 || authorValue.length < 3) {
+        alert(
+          "Veuillez saisir au moins 3 caractères pour le titre et l'auteur pour valider votre recherche"
+        );
       } else {
         //----------------● AFFICHAGE DES RESULTATS DE RECHERCHES------------------------------//
         const URLBooks = `https://www.googleapis.com/books/v1/volumes?q=${titleValue}+inauthor:${authorValue}`;
@@ -131,7 +140,7 @@ function addButtonSearchBook(buttonAddBook, hrElement) {
                 //---------------●Construction de notre article-----------------//
 
                 articleElement.innerHTML = `
-
+                   
                     <h5><strong>Titre:</strong> ${books.volumeInfo.title}</h5></br>
                     <p><strong>Id:</strong> ${books.id}</p></br>
                     <p>Auteurs: ${books.volumeInfo.authors}</p></br>
@@ -142,10 +151,8 @@ function addButtonSearchBook(buttonAddBook, hrElement) {
                         <i class="fas fa-bookmark"></i></a>
                       </span>
                     </div>
-                   
+                  
                   `;
-
-                // console.log(articleElement);
 
                 divBooks.appendChild(articleElement);
 

@@ -17,20 +17,23 @@ export function sendAllBookSessionStorage(
   bookmarkButton.addEventListener("click", (event) => {
     event.preventDefault();
 
+    const articleDivFlex = document.createElement("div");
+    articleDivFlex.classList.add("article_Div_Flex");
+
     if (sessionStorage.getItem(uniqueKey)) {
       alert("Vous ne pouvez ajouter deux fois le même livre");
       return;
     } else {
       sessionStorage.setItem(uniqueKey, JSON.stringify(bookData));
+
       bookmarkButton.style.color = "#128064";
       console.log("Ajouté dans notre sessionStorage");
 
       let bookbody = document.querySelector("#content");
 
-      // Vider le contenu afin d'éviter les doublons //
-
-      //ATTENTION ERREUR 0 RESOUDRE SI CONTENU VIDE pochlist titre disparait
-      bookbody.innerHTML = "";
+      // Créer un conteneur div pour les articles
+      const articlesContainer = document.createElement("div");
+      articlesContainer.classList.add("articleflex");
 
       for (let key in sessionStorage) {
         if (sessionStorage.hasOwnProperty(key)) {
@@ -54,20 +57,23 @@ export function sendAllBookSessionStorage(
             <p>Description: ${booksData.description}</p></br>
             <img src="${booksData.image}" alt="Book Cover" class="img-cover"></br>
             <div class="icon">
-              <a><span type="button" class="bookmark-btn-delete">
-              <i class="fas fa-trash"></i></a>
-              </span>
+             <a><span type="button" class="bookmark-btn-delete">
+            <i class="fas fa-trash"></i>
+            </span></a>
             </div>
             `;
 
-            bookbody.appendChild(articleElement);
+            // Ajouter l'article au conteneur
+            articlesContainer.appendChild(articleElement);
 
             deleteBookIdToPochList(articleElement, uniqueKey);
           }
         }
       }
 
-      //document.body.appendChild(bookbody);
+      // Ajouter le conteneur d'articles au contenu de la page
+      bookbody.innerHTML = "";
+      bookbody.appendChild(articlesContainer);
     }
   });
 }
@@ -84,7 +90,6 @@ export function deleteBookIdToPochList(articleElement, uniqueKey) {
       sessionStorage.removeItem(uniqueKey);
       articleElement.parentNode.removeChild(articleElement);
 
-      
       //----------Affichage dynamique---------------//
       Swal.fire({
         title: "Article supprimé",
@@ -103,7 +108,6 @@ export function deleteBookIdToPochList(articleElement, uniqueKey) {
 
 export function displayStaticDataofSessionSorage() {
   const displayBooksContent = document.getElementById("content");
-  const pochListTitle = displayBooksContent.querySelector("h2");
 
   displayBooksContent.innerHTML = "";
 
@@ -142,4 +146,8 @@ export function displayStaticDataofSessionSorage() {
       }
     }
   }
+  displayBooksContent.insertAdjacentHTML(
+    "afterbegin",
+    "<h2>Ma poch'liste</h2>"
+  );
 }
