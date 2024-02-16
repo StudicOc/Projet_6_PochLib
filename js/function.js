@@ -8,29 +8,33 @@ export function sendAllBookSessionStorage(
 ) {
   const bookmarkButton = articleElement.querySelector(".bookmark-btn");
 
-  const divBooks = document.createElement("div");
-  divBooks.id = "divBooks";
-
   //--------------------------Affichage de la poch’liste--------------------------------//
-
   //----- Ecoute de l'évènement de l'icon "Bookmark" pour ajouter un livre à notre Poch'List-------------------//
+
   bookmarkButton.addEventListener("click", (event) => {
     event.preventDefault();
 
-    //const articleDivFlex = document.createElement("div");
-    //articleDivFlex.classList.add("article_Div_Flex");
+    const articleDivFlex = document.createElement("div");
+    articleDivFlex.classList.add("article_Div_Flex");
 
     if (sessionStorage.getItem(uniqueKey)) {
       alert("Vous ne pouvez ajouter deux fois le même livre");
     } else {
+      Swal.fire({
+        title: "Hello",
+        text: "Ajouté à vos favoris!",
+        icon: "success",
+        showConfirmButton: false,
+        timer: 2500,
+        buttonsStyling: false,
+      });
       sessionStorage.setItem(uniqueKey, JSON.stringify(bookData));
 
       bookmarkButton.style.color = "#128064";
       console.log("Ajouté dans notre sessionStorage");
 
-      let bookbody = document.querySelector("#content");
+      let bookbody = document.querySelector("#content"); // Créer un conteneur div pour les articles
 
-      // Créer un conteneur div pour les articles
       const articlesContainer = document.createElement("div");
       articlesContainer.classList.add("articleflex");
 
@@ -50,31 +54,27 @@ export function sendAllBookSessionStorage(
 
             const articleElement = document.createElement("article");
             articleElement.innerHTML = `
-            <h5><strong>Titre:</strong> ${booksData.title}</h5></br>
-            <p><strong>Id:</strong> ${booksData.id}</p></br>
-            <p>Auteurs: ${booksData.authors}</p></br>
-            <p>Description: ${booksData.description}</p></br>
-            <img src="${booksData.image}" alt="Book Cover" class="img-cover"></br>
-            <div class="icon">
-             <a><span type="button" class="bookmark-btn-delete">
-            <i class="fas fa-trash"></i>
-            </span></a>
-            </div>
-            `;
+            <h5><strong>Titre:</strong> ${booksData.title}</h5></br>
+            <p><strong>Id:</strong> ${booksData.id}</p></br>
+            <p>Auteurs: ${booksData.authors}</p></br>
+            <p>Description: ${booksData.description}</p></br>
+            <img src="${booksData.image}" alt="Book Cover" class="img-cover"></br>
+            <div class="icon">
+             <a><span type="button" class="bookmark-btn-delete">
+            <i class="fas fa-trash"></i>
+            </span></a>
+            </div>
+            `;
 
-            // Ajouter l'article au conteneur
             articlesContainer.appendChild(articleElement);
 
             deleteBookIdToPochList(articleElement, uniqueKey);
           }
         }
-      }
-
-      // Ajouter le conteneur d'articles au contenu de la page
+      } // Ajouter le conteneur d'articles au contenu de la page //bookbody.innerHTML = "";
 
       bookbody.appendChild(articlesContainer);
     }
-
     checkSessionStorageElement();
   });
 }
@@ -89,17 +89,15 @@ export function deleteBookIdToPochList(articleElement, uniqueKey) {
   if (bookmarkButtonDelete) {
     bookmarkButtonDelete.addEventListener("click", (event) => {
       sessionStorage.removeItem(uniqueKey);
-      articleElement.parentNode.removeChild(articleElement);
+      articleElement.parentNode.removeChild(articleElement); //----------Affichage dynamique---------------//
 
-      //----------Affichage dynamique---------------//
       Swal.fire({
-        title: "Article supprimé",
+        title: "Good job!",
+        text: "Livre supprimé!",
         icon: "success",
-        background: "#C7F0BB",
         showConfirmButton: false,
         timer: 2500,
       });
-
       checkSessionStorageElement();
       console.log("Nous avons bien supprimé l'article: " + uniqueKey);
     });
@@ -123,6 +121,9 @@ export function displayStaticDataofSessionSorage() {
           bookData.description &&
           bookData.image
         ) {
+          const articleContainer = document.createElement("div");
+          articleContainer.id = "divBooks";
+
           const articleElement = document.createElement("article");
           articleElement.innerHTML = `
             <h5><strong>Titre:</strong> ${bookData.title}</h5></br>
@@ -137,9 +138,10 @@ export function displayStaticDataofSessionSorage() {
             </div>
           `;
 
-          displayBooksContent.appendChild(articleElement);
+          articleContainer.appendChild(articleElement);
+          displayBooksContent.appendChild(articleContainer);
 
-          deleteBookIdToPochList(articleElement, key);
+          deleteBookIdToPochList(articleContainer, key);
           checkSessionStorageElement();
         }
       } catch (error) {
@@ -152,10 +154,7 @@ export function displayStaticDataofSessionSorage() {
 //----------------------------//
 
 export function checkSessionStorageElement() {
-  const titleContent = document.querySelector("#content h2");
-
-  // Checker si il y a une clé qui contient book
-  // Récupération des clés avec object.keys
+  const titleContent = document.querySelector("#content h2"); //const titleContent =displayBooksContent.childNodes[1] //console.log(!!Object.keys(sessionStorage).find((sessionElement)=> sessionElement.includes("book")))
   if (
     !!Object.keys(sessionStorage).find((sessionElement) =>
       sessionElement.includes("book")

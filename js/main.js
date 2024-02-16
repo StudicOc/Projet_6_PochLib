@@ -15,7 +15,7 @@ divBooks.id = "divBooks";
 // ----------- CHARGEMENT DE LA PAGE---------------//
 
 function pageLoaded() {
-  //---------------●Création de notre bouton => "Ajouter un livre"----------------//
+  //---------------Création de notre bouton => "Ajouter un livre"----------------//
   const addBooksContainer = document.getElementById("content");
 
   const buttonAddBook = document.createElement("button");
@@ -25,14 +25,12 @@ function pageLoaded() {
   divElement.appendChild(buttonAddBook);
   addBooksContainer.appendChild(divElement);
 
-  //------------●Gestion de notre positionnement des balises----------//
+  //------------Gestion de notre positionnement des balises----------//
   const hrElement = document.querySelector("hr");
   document.body.insertBefore(divElement, hrElement);
 
   addButtonSearchBook(buttonAddBook, hrElement);
 }
-
-//--------------------------------------------------------------------------------//
 
 // ------- FETCH--- RETRIEVE RESULTS GOOGLE API BOOKS --------------------------//
 
@@ -40,7 +38,7 @@ function addButtonSearchBook(buttonAddBook, hrElement) {
   //----- ●Ecoute de l'évènement du bouton " ajouter un livre"-------------------//
   buttonAddBook.addEventListener("click", function (event) {
     divElement.style.display = "none";
-    divBooks.innerHTML = "";
+   
 
     //------------●Construction de notre formulaire------------------------//
     const form = document.createElement("form");
@@ -127,14 +125,10 @@ function addButtonSearchBook(buttonAddBook, hrElement) {
                 finalBooksId = booksID.filter(
                   (x, i) => booksID.indexOf(x) === i
                 );
-
-                //------Variable pour retrieve et stocker les items------//
               }
 
               for (let i = 0; i < finalBooksId.length; i++) {
-                //if (finalBooksId[i] == data.items[i].id) {
                 booksItem.push(data.items[i]);
-                //}
                 console.log(data.items[i]);
               }
 

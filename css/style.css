@@ -189,8 +189,15 @@ h5 {
 }
 
 @media only screen and (min-width: 600px) {
+  #divBooks {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
   article {
-    width: 14%;
+    width: 100%;
+    max-width: 350px;
+    min-height: 300px;
   }
   .book-container {
     padding: 8px;
@@ -200,42 +207,16 @@ h5 {
   }
 }
 @media only screen and (min-width: 768px) {
+  #divBooks {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
   article {
-    width: 14%;
+    width: 20%;
+    max-width: 350px;
+    min-height: 300px;
   }
 }
-/* @media only screen and (min-width: 1024px) {
-  article {
-    width: 14%;
-  }
-}
-
-@media only screen and (min-width: 600px) and (max-width: 800px) {
-  article {
-    width: 14%;
-  }
-
-  .book-container {
-    padding: 8px;
-  }
-
-  .book-title {
-    font-size: 1em;
-  }
-}
-@media only screen and (min-width: 600px) {
-  article {
-    width: 14%;
-  }
-
-  .book-container {
-    padding: 8px;
-  }
-
-  .book-title {
-    font-size: 1em;
-  }
-}
-*/
 
 /*# sourceMappingURL=style.css.map */
