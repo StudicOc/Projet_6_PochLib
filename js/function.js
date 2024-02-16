@@ -28,6 +28,7 @@ export function sendAllBookSessionStorage(
         timer: 2500,
         buttonsStyling: false,
       });
+      sessionStorage.clear();
       sessionStorage.setItem(uniqueKey, JSON.stringify(bookData));
 
       bookmarkButton.style.color = "#128064";
@@ -150,8 +151,6 @@ export function displayStaticDataofSessionSorage() {
     }
   }
 }
-
-//----------------------------//
 
 export function checkSessionStorageElement() {
   const titleContent = document.querySelector("#content h2"); //const titleContent =displayBooksContent.childNodes[1] //console.log(!!Object.keys(sessionStorage).find((sessionElement)=> sessionElement.includes("book")))
