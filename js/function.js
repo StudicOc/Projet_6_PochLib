@@ -17,12 +17,11 @@ export function sendAllBookSessionStorage(
   bookmarkButton.addEventListener("click", (event) => {
     event.preventDefault();
 
-    const articleDivFlex = document.createElement("div");
-    articleDivFlex.classList.add("article_Div_Flex");
+    //const articleDivFlex = document.createElement("div");
+    //articleDivFlex.classList.add("article_Div_Flex");
 
     if (sessionStorage.getItem(uniqueKey)) {
       alert("Vous ne pouvez ajouter deux fois le même livre");
-      return;
     } else {
       sessionStorage.setItem(uniqueKey, JSON.stringify(bookData));
 
@@ -72,9 +71,11 @@ export function sendAllBookSessionStorage(
       }
 
       // Ajouter le conteneur d'articles au contenu de la page
-      bookbody.innerHTML = "";
+
       bookbody.appendChild(articlesContainer);
     }
+
+    checkSessionStorageElement();
   });
 }
 
@@ -99,6 +100,7 @@ export function deleteBookIdToPochList(articleElement, uniqueKey) {
         timer: 2500,
       });
 
+      checkSessionStorageElement();
       console.log("Nous avons bien supprimé l'article: " + uniqueKey);
     });
   }
@@ -108,8 +110,6 @@ export function deleteBookIdToPochList(articleElement, uniqueKey) {
 
 export function displayStaticDataofSessionSorage() {
   const displayBooksContent = document.getElementById("content");
-
-  displayBooksContent.innerHTML = "";
 
   for (let key in sessionStorage) {
     if (sessionStorage.hasOwnProperty(key)) {
@@ -140,14 +140,33 @@ export function displayStaticDataofSessionSorage() {
           displayBooksContent.appendChild(articleElement);
 
           deleteBookIdToPochList(articleElement, key);
+          checkSessionStorageElement();
         }
       } catch (error) {
         console.error("Error parsing sessionStorage item:", error);
       }
     }
   }
-  displayBooksContent.insertAdjacentHTML(
-    "afterbegin",
-    "<h2>Ma poch'liste</h2>"
-  );
+}
+
+//----------------------------//
+
+export function checkSessionStorageElement() {
+  const titleContent = document.querySelector("#content h2");
+
+  // Checker si il y a une clé qui contient book
+  // Récupération des clés avec object.keys
+  if (
+    !!Object.keys(sessionStorage).find((sessionElement) =>
+      sessionElement.includes("book")
+    )
+  ) {
+    titleContent.style.display = "block";
+    console.log(titleContent);
+  } else {
+    titleContent.style.display = "none";
+    console.log(titleContent);
+  }
+
+  console.log("check");
 }

@@ -87,7 +87,7 @@ function addButtonSearchBook(buttonAddBook, hrElement) {
       const authorValue = authorInput.value.trim();
       const alertError = document.createElement("p");
 
-      //--------------------●Vérification des saisies--------------//
+      //--------------------Vérification des saisies--------------//
 
       if (titleValue === "" || authorValue === "") {
         alertError.innerText = "Veuillez vérifier votre saisie";
@@ -104,27 +104,51 @@ function addButtonSearchBook(buttonAddBook, hrElement) {
           "Veuillez saisir au moins 3 caractères pour le titre et l'auteur pour valider votre recherche"
         );
       } else {
-        //----------------● AFFICHAGE DES RESULTATS DE RECHERCHES------------------------------//
-        const URLBooks = `https://www.googleapis.com/books/v1/volumes?q=${titleValue}+inauthor:${authorValue}`;
+        let encodedTtile = encodeURI(titleValue);
+        let encodedAuthor = encodeURI(authorValue);
+
+        //----------------AFFICHAGE DES RESULTATS DE RECHERCHES------------------------------//
+        const URLBooks = `https://www.googleapis.com/books/v1/volumes?q=${encodedTtile}+inauthor:${encodedAuthor}`;
+        console.log(URLBooks);
 
         fetch(URLBooks)
           .then((response) => response.json())
           .then((data) => {
-            console.log("Data received:", data);
+            //-----------Construction des ID (duplicate)---------//
 
-            if (data.items && data.items.length > 0) {
+            //-----------Construction TAB retrieve ID-------------//
+            let booksID = []; // --- Initialiser notre tableau des ID----//
+            let finalBooksId;
+            let booksItem = []; // --- Initialiser notre tableau d'item----//
+
+            if (data.items.length > 0) {
+              for (let i = 0; i < data.items.length; i++) {
+                booksID.push(data.items[i].id);
+                finalBooksId = booksID.filter(
+                  (x, i) => booksID.indexOf(x) === i
+                );
+
+                //------Variable pour retrieve et stocker les items------//
+              }
+
+              for (let i = 0; i < finalBooksId.length; i++) {
+                //if (finalBooksId[i] == data.items[i].id) {
+                booksItem.push(data.items[i]);
+                //}
+                console.log(data.items[i]);
+              }
+
+              console.log("test Number id" + finalBooksId.length);
+              console.log("Test object item final" + booksItem);
+              console.log("Test Final id" + finalBooksId);
+
               const title = document.createElement("h5");
               title.textContent = "Résultats de recherches ";
               document.body.insertBefore(title, hrElement);
 
               let articleElement;
 
-              for (let books of data.items) {
-                //----------------------------------------------------------------------//
-
-                // ----Vérification si nous recevons toute la liste Item[]------------//
-                console.log("Processing book:", books);
-
+              for (let books of booksItem) {
                 const uniqueKey = `book_${books.id}`;
                 articleElement = document.createElement("article");
 
@@ -137,7 +161,7 @@ function addButtonSearchBook(buttonAddBook, hrElement) {
                     ? books.volumeInfo.description.slice(0, 150) + "..."
                     : books.volumeInfo.description || "Information manquante";
 
-                //---------------●Construction de notre article-----------------//
+                //---------------Construction de notre article-----------------//
 
                 articleElement.innerHTML = `
                    

@@ -6,24 +6,25 @@ $button-cursor: pointer;
 $button-padding: 10px 20px;
 $border-rad: 2.1px 2.1px;
 $fit: cover;
-
+$display: flex;
 $font-family: "Roboto", sans-serif;
 
 * {
   margin: 0;
   padding: 0;
 }
+
 body {
   font-family: $font-family;
   margin: 20px;
 }
 .div-add-book {
-  display: flex;
+  display: $display;
   justify-content: center;
 }
 
 .logo-container {
-  display: flex;
+  display: $display;
   justify-content: center;
   margin-top: 1rem;
   object-fit: cover;
@@ -46,6 +47,10 @@ body {
   box-shadow: 1px 10px 10px -6px #bdbfbf;
   padding: 1em 0em;
   border-radius: 4px;
+}
+
+#content h2 {
+  display: none;
 }
 
 .custom-button {
@@ -99,7 +104,7 @@ button {
 }
 
 .flex-Button-Search-Cancel {
-  display: flex;
+  display: $display;
   justify-content: flex-start;
   flex-direction: column;
   width: fit-content;
@@ -109,7 +114,7 @@ button {
 article {
   border: 2px solid #9c9c9c;
   border-radius: 8px;
-  display: flex;
+  display: $display;
   flex-direction: column;
   align-items: normal;
   text-align: start;
@@ -128,7 +133,7 @@ article {
 }
 
 .articleflex {
-  display: flex;
+  display: $display;
   flex-wrap: wrap;
   justify-content: center;
 }
@@ -152,7 +157,7 @@ h2 {
 }
 
 .add_Books {
-  display: flex;
+  display: $display;
   justify-content: center;
 }
 
@@ -191,7 +196,27 @@ h5 {
   height: auto;
 }
 
-@media only screen and (min-width: 1024px) {
+@media only screen and (min-width: 600px) {
+  article {
+    width: 14%;
+  }
+
+  .book-container {
+    padding: 8px;
+  }
+
+  .book-title {
+    font-size: 1em;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  article {
+    width: 14%;
+  }
+}
+
+/* @media only screen and (min-width: 1024px) {
   article {
     width: 14%;
   }
@@ -223,3 +248,4 @@ h5 {
     font-size: 1em;
   }
 }
+*/

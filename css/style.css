@@ -39,6 +39,10 @@ body {
   border-radius: 4px;
 }
 
+#content h2 {
+  display: none;
+}
+
 .custom-button {
   background-color: #128064;
   border: none;
@@ -184,22 +188,6 @@ h5 {
   height: auto;
 }
 
-@media only screen and (min-width: 1024px) {
-  article {
-    width: 14%;
-  }
-}
-@media only screen and (min-width: 600px) and (max-width: 800px) {
-  article {
-    width: 14%;
-  }
-  .book-container {
-    padding: 8px;
-  }
-  .book-title {
-    font-size: 1em;
-  }
-}
 @media only screen and (min-width: 600px) {
   article {
     width: 14%;
@@ -211,5 +199,43 @@ h5 {
     font-size: 1em;
   }
 }
+@media only screen and (min-width: 768px) {
+  article {
+    width: 14%;
+  }
+}
+/* @media only screen and (min-width: 1024px) {
+  article {
+    width: 14%;
+  }
+}
+
+@media only screen and (min-width: 600px) and (max-width: 800px) {
+  article {
+    width: 14%;
+  }
+
+  .book-container {
+    padding: 8px;
+  }
+
+  .book-title {
+    font-size: 1em;
+  }
+}
+@media only screen and (min-width: 600px) {
+  article {
+    width: 14%;
+  }
+
+  .book-container {
+    padding: 8px;
+  }
+
+  .book-title {
+    font-size: 1em;
+  }
+}
+*/
 
 /*# sourceMappingURL=style.css.map */
