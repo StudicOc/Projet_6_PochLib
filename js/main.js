@@ -38,7 +38,6 @@ function addButtonSearchBook(buttonAddBook, hrElement) {
   //----- ●Ecoute de l'évènement du bouton " ajouter un livre"-------------------//
   buttonAddBook.addEventListener("click", function (event) {
     divElement.style.display = "none";
-   
 
     //------------●Construction de notre formulaire------------------------//
     const form = document.createElement("form");
@@ -93,6 +92,7 @@ function addButtonSearchBook(buttonAddBook, hrElement) {
         authorInput.style.borderColor = "#BD5758";
         buttonDiv.appendChild(alertError);
       }
+      //let regexValue = new RegExp("^[a-z]+$");
       if (!isNaN(titleValue) || !isNaN(authorValue)) {
         alert("Veuillez saisir un titre et un auteur sans chiffres");
         console.log("L'utilisateur utilise des données numériques");
@@ -112,37 +112,21 @@ function addButtonSearchBook(buttonAddBook, hrElement) {
         fetch(URLBooks)
           .then((response) => response.json())
           .then((data) => {
-            //-----------Construction des ID (duplicate)---------//
-
-            //-----------Construction TAB retrieve ID-------------//
-            let booksID = []; // --- Initialiser notre tableau des ID----//
-            let finalBooksId;
-            let booksItem = []; // --- Initialiser notre tableau d'item----//
-
             if (data.items.length > 0) {
-              for (let i = 0; i < data.items.length; i++) {
-                booksID.push(data.items[i].id);
-                finalBooksId = booksID.filter(
-                  (x, i) => booksID.indexOf(x) === i
-                );
+              let tmpMapId = new Map();
+
+              if (data.items.length > 0) {
+                for (let i = 0; i < data.items.length; i++) {
+                  tmpMapId.set(data.items[i].id, data.items[i]);
+                }
               }
-
-              for (let i = 0; i < finalBooksId.length; i++) {
-                booksItem.push(data.items[i]);
-                console.log(data.items[i]);
-              }
-
-              console.log("test Number id" + finalBooksId.length);
-              console.log("Test object item final" + booksItem);
-              console.log("Test Final id" + finalBooksId);
-
               const title = document.createElement("h5");
               title.textContent = "Résultats de recherches ";
               document.body.insertBefore(title, hrElement);
 
               let articleElement;
 
-              for (let books of booksItem) {
+              for (let books of tmpMapId.values()) {
                 const uniqueKey = `book_${books.id}`;
                 articleElement = document.createElement("article");
 
