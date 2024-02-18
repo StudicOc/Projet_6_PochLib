@@ -82,24 +82,17 @@ function addButtonSearchBook(buttonAddBook, hrElement) {
     submitButton.addEventListener("click", function (e) {
       const titleValue = titleInput.value.trim();
       const authorValue = authorInput.value.trim();
-      const alertError = document.createElement("p");
 
       //--------------------Vérification des saisies--------------//
 
-      if (titleValue === "" || authorValue === "") {
-        alertError.innerText = "Veuillez vérifier votre saisie";
-        titleInput.style.borderColor = "#BD5758";
-        authorInput.style.borderColor = "#BD5758";
-        buttonDiv.appendChild(alertError);
-      }
-      //let regexValue = new RegExp("^[a-z]+$");
-      if (!isNaN(titleValue) || !isNaN(authorValue)) {
-        alert("Veuillez saisir un titre et un auteur sans chiffres");
-        console.log("L'utilisateur utilise des données numériques");
-      }
-      if (titleValue.length < 3 || authorValue.length < 3) {
+      if (
+        titleValue === "" ||
+        authorValue === "" ||
+        titleValue.length < 3 ||
+        authorValue.length < 3
+      ) {
         alert(
-          "Veuillez saisir au moins 3 caractères pour le titre et l'auteur pour valider votre recherche"
+          "Veuillez vérifier votre saisie et saisir au moins 3 caractères pour le titre et l'auteur pour valider votre recherche"
         );
       } else {
         let encodedTtile = encodeURI(titleValue);
@@ -120,7 +113,7 @@ function addButtonSearchBook(buttonAddBook, hrElement) {
                   tmpMapId.set(data.items[i].id, data.items[i]);
                 }
               }
-              const title = document.createElement("h5");
+              const title = document.createElement("h6");
               title.textContent = "Résultats de recherches ";
               document.body.insertBefore(title, hrElement);
 
@@ -135,8 +128,8 @@ function addButtonSearchBook(buttonAddBook, hrElement) {
                   : "images/unavailable.png";
                 const limitedDescription =
                   books.volumeInfo.description &&
-                  books.volumeInfo.description.length > 150
-                    ? books.volumeInfo.description.slice(0, 150) + "..."
+                  books.volumeInfo.description.length > 200
+                    ? books.volumeInfo.description.slice(0, 200) + "..."
                     : books.volumeInfo.description || "Information manquante";
 
                 //---------------Construction de notre article-----------------//
