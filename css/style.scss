@@ -165,12 +165,16 @@ footer {
   margin-top: 2em;
 }
 h5 {
-  text-align: center;
   font-size: medium;
   margin-top: 1em;
   margin-bottom: 1em;
 }
-
+h6 {
+  font-size: medium;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  text-align: center;
+}
 .swal2-popup {
   border-radius: 10px;
   width: 15%;
@@ -202,6 +206,7 @@ h5 {
     flex-wrap: wrap;
     justify-content: center;
   }
+
   article {
     width: 100%;
     max-width: 350px;
@@ -223,6 +228,7 @@ h5 {
     flex-wrap: wrap;
     justify-content: center;
   }
+
   article {
     width: 20%;
     max-width: 350px;

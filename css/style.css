@@ -157,10 +157,16 @@ footer {
 }
 
 h5 {
-  text-align: center;
   font-size: medium;
   margin-top: 1em;
   margin-bottom: 1em;
+}
+
+h6 {
+  font-size: medium;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  text-align: center;
 }
 
 .swal2-popup {
