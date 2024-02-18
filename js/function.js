@@ -8,14 +8,8 @@ export function sendAllBookSessionStorage(
 ) {
   const bookmarkButton = articleElement.querySelector(".bookmark-btn");
 
-  //--------------------------Affichage de la poch’liste--------------------------------//
-  //----- Ecoute de l'évènement de l'icon "Bookmark" pour ajouter un livre à notre Poch'List-------------------//
-
   bookmarkButton.addEventListener("click", (event) => {
     event.preventDefault();
-
-    const articleDivFlex = document.createElement("div");
-    articleDivFlex.classList.add("article_Div_Flex");
 
     function isExisteInSessionStorage() {
       if (sessionStorage.getItem(uniqueKey) !== null) {
@@ -58,8 +52,6 @@ export function sendAllBookSessionStorage(
             booksData.description &&
             booksData.image
           ) {
-            //---------------●Construction de notre article-----------------//
-
             const articleElement = document.createElement("article");
             articleElement.innerHTML = `
             <h5><strong>Titre:</strong> ${booksData.title}</h5></br>
@@ -87,33 +79,7 @@ export function sendAllBookSessionStorage(
   });
 }
 
-//----- Ecoute de l'évènement de l'icon "Bookmark" de supression d'un article-------------------//
-
-export function deleteBookIdToPochList(articleElement, uniqueKey) {
-  const bookmarkButtonDelete = articleElement.querySelector(
-    ".bookmark-btn-delete"
-  );
-
-  if (bookmarkButtonDelete) {
-    bookmarkButtonDelete.addEventListener("click", (event) => {
-      sessionStorage.removeItem(uniqueKey);
-      articleElement.parentNode.removeChild(articleElement); //----------Affichage dynamique---------------//
-
-      Swal.fire({
-        title: "Good job!",
-        text: "Livre supprimé!",
-        icon: "success",
-        showConfirmButton: false,
-        timer: 2500,
-      });
-      checkSessionStorageElement();
-      console.log("Nous avons bien supprimé l'article: " + uniqueKey);
-    });
-  }
-}
-
-//----------------Affichage de la Poch-List lors du rechargement de la page--------------//
-
+//------------------------AFFICHAGE DES DOUBLONS----------------------------------//
 export function displayStaticDataofSessionSorage() {
   const displayBooksContent = document.getElementById("content");
 
@@ -159,8 +125,9 @@ export function displayStaticDataofSessionSorage() {
   }
 }
 
+//-------------------------CHECKER LES ELEMENTS SESSIONSTORAGE-----------------------//
 export function checkSessionStorageElement() {
-  const titleContent = document.querySelector("#content h2"); //const titleContent =displayBooksContent.childNodes[1] //console.log(!!Object.keys(sessionStorage).find((sessionElement)=> sessionElement.includes("book")))
+  const titleContent = document.querySelector("#content h2");
   if (
     !!Object.keys(sessionStorage).find((sessionElement) =>
       sessionElement.includes("book")
@@ -174,4 +141,28 @@ export function checkSessionStorageElement() {
   }
 
   console.log("check");
+}
+
+//---------------------------SUPRESSION FAVORIS--------------------------------------//
+export function deleteBookIdToPochList(articleElement, uniqueKey) {
+  const bookmarkButtonDelete = articleElement.querySelector(
+    ".bookmark-btn-delete"
+  );
+
+  if (bookmarkButtonDelete) {
+    bookmarkButtonDelete.addEventListener("click", (event) => {
+      sessionStorage.removeItem(uniqueKey);
+      articleElement.parentNode.removeChild(articleElement);
+
+      Swal.fire({
+        title: "Good job!",
+        text: "Livre supprimé!",
+        icon: "success",
+        showConfirmButton: false,
+        timer: 2500,
+      });
+      checkSessionStorageElement();
+      console.log("Nous avons bien supprimé l'article: " + uniqueKey);
+    });
+  }
 }

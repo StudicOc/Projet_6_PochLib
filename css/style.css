@@ -123,6 +123,18 @@ article {
   justify-content: center;
 }
 
+#divBooksFavories {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.divBookfav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
 .articleflex {
   display: flex;
   flex-wrap: wrap;
@@ -201,27 +213,13 @@ h6 {
     justify-content: center;
   }
   article {
-    width: 100%;
-    max-width: 350px;
-    min-height: 300px;
-  }
-  .book-container {
-    padding: 8px;
-  }
-  .book-title {
-    font-size: 1em;
-  }
-}
-@media only screen and (min-width: 768px) {
-  #divBooks {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  article {
     width: 20%;
     max-width: 350px;
     min-height: 300px;
+  }
+  .swal2-popup {
+    height: 300px;
+    width: 300px;
   }
 }
 

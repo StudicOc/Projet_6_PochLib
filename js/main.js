@@ -12,10 +12,10 @@ divElement.classList.add("add_Books");
 const divBooks = document.createElement("div");
 divBooks.id = "divBooks";
 
-// ----------- CHARGEMENT DE LA PAGE---------------//
+// ----------- FUNCTION CHARGEMENT DE LA PAGE---------------//
 
 function pageLoaded() {
-  //---------------Création de notre bouton => "Ajouter un livre"----------------//
+  //---------------Création de notre bouton "Ajouter un livre"----------------//
   const addBooksContainer = document.getElementById("content");
 
   const buttonAddBook = document.createElement("button");
@@ -32,15 +32,17 @@ function pageLoaded() {
   addButtonSearchBook(buttonAddBook, hrElement);
 }
 
-// ------- FETCH--- RETRIEVE RESULTS GOOGLE API BOOKS --------------------------//
+// ------- FETCH---AFFICHAGE DES RESULTATS  --------------------------//
 
 function addButtonSearchBook(buttonAddBook, hrElement) {
-  //----- ●Ecoute de l'évènement du bouton " ajouter un livre"-------------------//
+  //----- Ecoute de l'évènement du bouton " ajouter un livre"-------------------//
   buttonAddBook.addEventListener("click", function (event) {
     divElement.style.display = "none";
 
-    //------------●Construction de notre formulaire------------------------//
+    //------------Construction de notre formulaire------------------------//
     const form = document.createElement("form");
+
+    //--------------INPUT-------------------//
 
     const titleLabel = document.createElement("label");
     titleLabel.textContent = "Titre du livre ";
@@ -58,6 +60,8 @@ function addButtonSearchBook(buttonAddBook, hrElement) {
     form.appendChild(authorLabel);
     form.appendChild(authorInput);
 
+    //----------------BUTTON : SEARCH + CANCEL --------------------//
+
     const buttonDiv = document.createElement("div");
     buttonDiv.classList.add("flex-Button-Search-Cancel");
 
@@ -73,17 +77,22 @@ function addButtonSearchBook(buttonAddBook, hrElement) {
     cancelButton.style.backgroundColor = "#BD5758";
     buttonDiv.appendChild(cancelButton);
 
+    //------------------AJOUT DES ELEMENTS DANS LE DOM --------------//
+
     document.body.appendChild(form);
     document.body.appendChild(buttonDiv);
 
     document.body.insertBefore(form, hrElement);
     document.body.insertBefore(buttonDiv, hrElement);
 
+    //------------------ECOUTE DE NOTRE EVENEMENT SUBMIT-----------------------//
+
     submitButton.addEventListener("click", function (e) {
+      e.preventDefault();
       const titleValue = titleInput.value.trim();
       const authorValue = authorInput.value.trim();
 
-      //--------------------Vérification des saisies--------------//
+      //--------------------VERIFICATION DES SAISIES--------------//
 
       if (
         titleValue === "" ||
@@ -106,6 +115,7 @@ function addButtonSearchBook(buttonAddBook, hrElement) {
           .then((response) => response.json())
           .then((data) => {
             if (data.items.length > 0) {
+              //---------------MAP-----------------//
               let tmpMapId = new Map();
 
               if (data.items.length > 0) {
@@ -113,8 +123,10 @@ function addButtonSearchBook(buttonAddBook, hrElement) {
                   tmpMapId.set(data.items[i].id, data.items[i]);
                 }
               }
+              //----------------TITLE---------------//
               const title = document.createElement("h6");
               title.textContent = "Résultats de recherches ";
+
               document.body.insertBefore(title, hrElement);
 
               let articleElement;
@@ -132,7 +144,7 @@ function addButtonSearchBook(buttonAddBook, hrElement) {
                     ? books.volumeInfo.description.slice(0, 200) + "..."
                     : books.volumeInfo.description || "Information manquante";
 
-                //---------------Construction de notre article-----------------//
+                //---------------CONSTRUCTION DE NOS ARTICLES-----------------//
 
                 articleElement.innerHTML = `
                    
@@ -172,6 +184,7 @@ function addButtonSearchBook(buttonAddBook, hrElement) {
 
               document.body.insertBefore(divBooks, hrElement);
             } else {
+              //------------------CONDITION PAS DE RESULTATS GOOGLE API BOOK--------------//
               const noResultsDiv = document.createElement("div");
               noResultsDiv.innerHTML = `<p>Aucun livre n’a été trouvé</p>`;
               document.body.insertBefore(noResultsDiv, hrElement);
@@ -183,7 +196,7 @@ function addButtonSearchBook(buttonAddBook, hrElement) {
       }
     });
 
-    //------------------●Ecoute de l'évènement du bouton "ANNULER"-------------------//
+    //------------------ANNULER LE FORMULAIRE + RECHERCHES-------------------//
 
     cancelButton.addEventListener("click", function (e) {
       e.preventDefault();
@@ -210,6 +223,8 @@ function addButtonSearchBook(buttonAddBook, hrElement) {
     });
   });
 }
+
+//----------------FUNCTION RECHARGEMENT ------------------------//
 
 document.addEventListener("DOMContentLoaded", function (e) {
   pageLoaded();
