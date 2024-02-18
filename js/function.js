@@ -17,7 +17,14 @@ export function sendAllBookSessionStorage(
     const articleDivFlex = document.createElement("div");
     articleDivFlex.classList.add("article_Div_Flex");
 
-    if (sessionStorage.getItem(uniqueKey)) {
+    function isExisteInSessionStorage() {
+      if (sessionStorage.getItem(uniqueKey) !== null) {
+        return true;
+      }
+      return false;
+    }
+
+    if (isExisteInSessionStorage()) {
       alert("Vous ne pouvez ajouter deux fois le même livre");
     } else {
       Swal.fire({
@@ -28,20 +35,20 @@ export function sendAllBookSessionStorage(
         timer: 2500,
         buttonsStyling: false,
       });
-      sessionStorage.clear();
-      sessionStorage.setItem(uniqueKey, JSON.stringify(bookData));
 
-      bookmarkButton.style.color = "#128064";
-      console.log("Ajouté dans notre sessionStorage");
+      if (!isExisteInSessionStorage()) {
+        sessionStorage.setItem(uniqueKey, JSON.stringify(bookData));
 
-      let bookbody = document.querySelector("#content"); // Créer un conteneur div pour les articles
+        bookmarkButton.style.color = "#128064";
+        console.log("Ajouté dans notre sessionStorage");
 
-      const articlesContainer = document.createElement("div");
-      articlesContainer.classList.add("articleflex");
+        let bookbody = document.querySelector("#content");
 
-      for (let key in sessionStorage) {
-        if (sessionStorage.hasOwnProperty(key)) {
-          let booksData = JSON.parse(sessionStorage.getItem(key));
+        const articlesContainer = document.createElement("div");
+        articlesContainer.id = "divBooks";
+
+        if (sessionStorage.hasOwnProperty(uniqueKey)) {
+          let booksData = JSON.parse(sessionStorage.getItem(uniqueKey));
 
           console.log(bookData.title);
           if (
@@ -55,16 +62,16 @@ export function sendAllBookSessionStorage(
 
             const articleElement = document.createElement("article");
             articleElement.innerHTML = `
-            <h5><strong>Titre:</strong> ${booksData.title}</h5></br>
-            <p><strong>Id:</strong> ${booksData.id}</p></br>
-            <p>Auteurs: ${booksData.authors}</p></br>
-            <p>Description: ${booksData.description}</p></br>
-            <img src="${booksData.image}" alt="Book Cover" class="img-cover"></br>
-            <div class="icon">
-             <a><span type="button" class="bookmark-btn-delete">
-            <i class="fas fa-trash"></i>
-            </span></a>
-            </div>
+            <h5><strong>Titre:</strong> ${booksData.title}</h5></br>
+            <p><strong>Id:</strong> ${booksData.id}</p></br>
+            <p>Auteurs: ${booksData.authors}</p></br>
+            <p>Description: ${booksData.description}</p></br>
+            <img src="${booksData.image}" alt="Book Cover" class="img-cover"></br>
+            <div class="icon">
+            <span type="button" class="bookmark-btn-delete">
+            <i class="fas fa-trash"></i>
+            </span>
+            </div>
             `;
 
             articlesContainer.appendChild(articleElement);
@@ -72,9 +79,9 @@ export function sendAllBookSessionStorage(
             deleteBookIdToPochList(articleElement, uniqueKey);
           }
         }
-      } // Ajouter le conteneur d'articles au contenu de la page //bookbody.innerHTML = "";
 
-      bookbody.appendChild(articlesContainer);
+        bookbody.appendChild(articlesContainer);
+      }
     }
     checkSessionStorageElement();
   });
@@ -133,8 +140,8 @@ export function displayStaticDataofSessionSorage() {
             <p>Description: ${bookData.description}</p></br>
             <img src="${bookData.image}" alt="Book Cover" class="img-cover"></br>
             <div class="icon">
-              <a><span type="button" class="bookmark-btn-delete">
-                <i class="fas fa-trash"></i></a>
+              <span type="button" class="bookmark-btn-delete">
+                <i class="fas fa-trash"></i>
               </span>
             </div>
           `;
