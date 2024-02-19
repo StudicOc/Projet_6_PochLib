@@ -1,4 +1,4 @@
-// ---------IMPORTATION DU FICHIER FUNCTION-----------//
+// ---------IMPORTATION DES FONCTIONS-----------//
 
 import {
   sendAllBookSessionStorage,
@@ -32,10 +32,8 @@ function pageLoaded() {
   addButtonSearchBook(buttonAddBook, hrElement);
 }
 
-// ------- FETCH---AFFICHAGE DES RESULTATS  --------------------------//
-
+//----- Ecoute de l'évènement du bouton " ajouter un livre"-------------------//
 function addButtonSearchBook(buttonAddBook, hrElement) {
-  //----- Ecoute de l'évènement du bouton " ajouter un livre"-------------------//
   buttonAddBook.addEventListener("click", function (event) {
     divElement.style.display = "none";
 
@@ -108,12 +106,20 @@ function addButtonSearchBook(buttonAddBook, hrElement) {
         let encodedAuthor = encodeURI(authorValue);
 
         //----------------AFFICHAGE DES RESULTATS DE RECHERCHES------------------------------//
+        //---RECUPERATION DES DONNEES DE L'API---//
+        //---Requête HTTP avec la méthode GET--//
+
         const URLBooks = `https://www.googleapis.com/books/v1/volumes?q=${encodedTtile}+inauthor:${encodedAuthor}`;
         console.log(URLBooks);
 
         fetch(URLBooks)
           .then((response) => response.json())
           .then((data) => {
+            const existingTitleSearch = document.querySelector("h6");
+            if (existingTitleSearch) {
+              existingTitleSearch.remove();
+            }
+
             if (data.items.length > 0) {
               //---------------MAP-----------------//
               let tmpMapId = new Map();
@@ -130,6 +136,7 @@ function addButtonSearchBook(buttonAddBook, hrElement) {
               document.body.insertBefore(title, hrElement);
 
               let articleElement;
+              //---Itération pour afficher les données de l'API---//
 
               for (let books of tmpMapId.values()) {
                 const uniqueKey = `book_${books.id}`;
@@ -163,7 +170,7 @@ function addButtonSearchBook(buttonAddBook, hrElement) {
 
                 divBooks.appendChild(articleElement);
 
-                // Appel de notre function de suppression d'un article//
+                //----------Appel de notre function de suppression d'un article---------------//
                 deleteBookIdToPochList(articleElement, uniqueKey);
 
                 const bookData = {
@@ -200,7 +207,7 @@ function addButtonSearchBook(buttonAddBook, hrElement) {
 
     cancelButton.addEventListener("click", function (e) {
       e.preventDefault();
-      const titleElement = document.querySelector("h5");
+      const titleElement = document.querySelector("h6");
 
       if (document.body.contains(form)) {
         document.body.removeChild(form);

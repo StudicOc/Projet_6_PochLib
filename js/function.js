@@ -79,7 +79,7 @@ export function sendAllBookSessionStorage(
   });
 }
 
-//------------------------AFFICHAGE DES DOUBLONS----------------------------------//
+//------------------------AFFICHAGE DE NOTRE POCHLIST- STATIC-PAGE----------------------------------//
 export function displayStaticDataofSessionSorage() {
   const displayBooksContent = document.getElementById("content");
 
@@ -95,6 +95,8 @@ export function displayStaticDataofSessionSorage() {
           bookData.description &&
           bookData.image
         ) {
+          console.log("Test de récupération du livre" + bookData.title);
+
           const articleContainer = document.createElement("div");
           articleContainer.id = "divBooks";
 
