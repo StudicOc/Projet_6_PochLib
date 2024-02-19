@@ -107,7 +107,7 @@ function addButtonSearchBook(buttonAddBook, hrElement) {
 
         //----------------AFFICHAGE DES RESULTATS DE RECHERCHES------------------------------//
         //---RECUPERATION DES DONNEES DE L'API---//
-        //---Requête HTTP avec la méthode GET--//
+        //---Requête HTTP avec la méthode GET----//
 
         const URLBooks = `https://www.googleapis.com/books/v1/volumes?q=${encodedTtile}+inauthor:${encodedAuthor}`;
         console.log(URLBooks);
