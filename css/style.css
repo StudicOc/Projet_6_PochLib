@@ -1,0 +1,188 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Roboto", sans-serif;
+  margin: 20px;
+}
+
+.logo-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+  object-fit: cover;
+  margin-bottom: 1rem;
+}
+
+.logo {
+  width: 150px;
+  height: auto;
+}
+
+.img-cover {
+  width: 150px;
+  height: auto;
+  object-fit: cover;
+}
+
+.title {
+  text-align: center;
+  background-color: #eaeaea;
+  box-shadow: 1px 10px 10px -6px #bdbfbf;
+  padding: 1em 0em;
+  border-radius: 4px;
+}
+
+#content h2 {
+  display: none;
+}
+
+.custom-button {
+  background-color: #128064;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 2.1px 2.1px;
+  -moz-border-radius: 2.1px 2.1px;
+  -ms-border-radius: 2.1px 2.1px;
+  -o-border-radius: 2.1px 2.1px;
+  -webkit-border-radius: 2.1px 2.1px;
+  margin-top: 2em;
+  margin-bottom: 2em;
+  transition: transform 0.3s ease-in-out;
+}
+.custom-button:hover {
+  cursor: pointer;
+  transform: scale(1.2);
+}
+
+form {
+  margin: 0 auto;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+}
+
+input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 16px;
+  box-sizing: border-box;
+}
+
+button {
+  border-style: none;
+  border-radius: 2.1px 2.1px;
+  border: none;
+  cursor: pointer;
+  padding: 10px 20px;
+  margin-top: 2em;
+}
+
+.icon {
+  position: relative;
+  transition: 2s;
+  cursor: pointer;
+  -webkit-transition: 2s;
+}
+
+.flex-Button-Search-Cancel {
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  width: fit-content;
+  margin-bottom: 3em;
+}
+
+article {
+  border: 2px solid #9c9c9c;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: normal;
+  text-align: start;
+  background-color: whitesmoke;
+  font-size: small;
+  width: 45%;
+  margin: 10px;
+  padding: 1em;
+  position: relative;
+}
+
+#divBooks {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.bookmark-btn {
+  cursor: pointer;
+}
+
+title,
+h2 {
+  text-align: center;
+  font-size: 20px;
+  margin-top: 1em;
+  margin-bottom: 2em;
+}
+
+.add_Books {
+  display: flex;
+  justify-content: center;
+}
+
+h5 {
+  font-size: medium;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+h6 {
+  font-size: medium;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  text-align: center;
+}
+
+.book-title {
+  font-size: 1.2em;
+}
+
+.img-cover {
+  max-width: 100%;
+  height: auto;
+}
+
+@media only screen and (min-width: 600px) {
+  #divBooks {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  article {
+    width: 20%;
+    max-width: 350px;
+    min-height: 300px;
+  }
+  .swal2-popup {
+    height: 300px;
+    width: 300px;
+  }
+}
+@media screen and (max-width: 599px) {
+  .swal2-popup {
+    width: 15%;
+  }
+}
+
+/*# sourceMappingURL=style.css.map */
